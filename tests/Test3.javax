@@ -1,0 +1,12 @@
+public class Test3 {
+	innerbae a; // should pass
+	public void foo(boolean x) {
+		a = "dude";  // ERROR: incompatible types
+		break;
+	}
+	class innerbae {
+	
+	}
+}
+
+

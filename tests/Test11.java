@@ -1,9 +1,9 @@
-public class Test1 {
+public class Test9 {
 
-    boolean a;
+    int a;
 
     public void foo(boolean x) {
-        a = "false";
+        a = 2 + 2.0;
         break;
     }
 }

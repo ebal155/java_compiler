@@ -1,0 +1,9 @@
+public class Test12 {
+	int a;
+	public void foo(boolean x) {
+		a = 'a' + 'c';  //testing for character literals
+		break;
+	}
+}
+
+

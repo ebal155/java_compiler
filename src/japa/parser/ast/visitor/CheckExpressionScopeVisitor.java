@@ -83,17 +83,22 @@ import japa.parser.ast.stmt.ThrowStmt;
 import japa.parser.ast.stmt.TryStmt;
 import japa.parser.ast.stmt.TypeDeclarationStmt;
 import japa.parser.ast.stmt.WhileStmt;
+import japa.parser.ast.symtab.GlobalScope;
 import japa.parser.ast.symtab.Scope;
+import japa.parser.ast.symtab.Symbol;
 import japa.parser.ast.type.ClassOrInterfaceType;
 import japa.parser.ast.type.PrimitiveType;
 import japa.parser.ast.type.ReferenceType;
 import japa.parser.ast.type.Type;
 import japa.parser.ast.type.VoidType;
 import japa.parser.ast.type.WildcardType;
+
 import java.util.Iterator;
 import java.util.List;
 
-public class CheckExpressionVisitor implements VoidVisitor<Object>{
+import se701.A2SemanticsException;
+
+public class CheckExpressionScopeVisitor implements VoidVisitor<Object>{
 	
 	private void printModifiers(int modifiers) {
         if (ModifierSet.isPrivate(modifiers)) {
@@ -169,6 +174,7 @@ public class CheckExpressionVisitor implements VoidVisitor<Object>{
     }
 
     public void visit(CompilationUnit n, Object arg) {
+
         if (n.getPakage() != null) {
             n.getPakage().accept(this, arg);
         }
@@ -193,12 +199,13 @@ public class CheckExpressionVisitor implements VoidVisitor<Object>{
 
     public void visit(NameExpr n, Object arg) {
     	Scope scope = n.getScope();
-    	
-    	if (scope.resolve(n.getName()) != null) {
-//			System.out.println(scope.resolve(n.getName()).getName() + " is in scope");
-		}else{
-//			System.out.println("Variable " + n.getName() + " is outside of scope");
-		}
+    	    	
+    	if (!(scope instanceof GlobalScope)) {
+	    	if (scope.resolve(n.getName()) == null) {
+				throw new A2SemanticsException(n.getName() + " at line " + n.getBeginLine() + ", column " + n.getBeginColumn() + " is not defined");
+			}else{
+			}
+    	}
     }
 
     public void visit(QualifiedNameExpr n, Object arg) {

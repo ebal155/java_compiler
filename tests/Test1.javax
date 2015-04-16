@@ -1,9 +1,9 @@
 public class Test1 {
-	int a;
-	
-	public delegate void foo(boolean x) {
-		a = false;  // ERROR: incompatible types
-		
-		//break;
+	boolean a;
+	public void foo(boolean x) {
+		a = "false";  // ERROR: incompatible types
+		break;
 	}
 }
+
+

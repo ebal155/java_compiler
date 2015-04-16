@@ -2,22 +2,14 @@ package se701;
 
 public class StudentSample {
 
-    int check;
-
-    boolean c;
-
-    int asdf;
+    int a;
 
 
 
-    public static void main(String[] args) {
-        c = false;
-        c = 5;
-        c = c + 5 + k + d + r;
-        c = a + b;
+    public void main(String[] args) {
+        a = 2 + 3;
     }
 
     public void add(int a, int b) {
-        b = true;
     }
 }

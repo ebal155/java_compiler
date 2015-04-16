@@ -8,7 +8,7 @@ import java.io.PrintWriter;
 import japa.parser.JavaParser;
 import japa.parser.ParseException;
 import japa.parser.ast.CompilationUnit;
-import japa.parser.ast.visitor.CheckExpressionVisitor;
+import japa.parser.ast.visitor.CheckExpressionScopeVisitor;
 import japa.parser.ast.visitor.CreateScopesVisitor;
 import japa.parser.ast.visitor.DefineSymbolsVisitor;
 import japa.parser.ast.visitor.SourceToSourceVisitor;
@@ -35,11 +35,11 @@ public class A2Compiler {
 		DefineSymbolsVisitor defineSymbolsVisitor = new DefineSymbolsVisitor();
 		ast.accept(defineSymbolsVisitor, null);
 		
+		CheckExpressionScopeVisitor checkExpressionVisitor = new CheckExpressionScopeVisitor();
+		ast.accept(checkExpressionVisitor, null);
+		
 		TypeCheckVisitor typeCheckVisitor = new TypeCheckVisitor();
 		ast.accept(typeCheckVisitor, null);
-		
-		CheckExpressionVisitor checkExpressionVisitor = new CheckExpressionVisitor();
-		ast.accept(checkExpressionVisitor, null);
 		
 		String result = printVisitor.getSource();
 		

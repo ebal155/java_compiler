@@ -1,0 +1,9 @@
+public class Test13 {
+	String a = "test"; //getId() shit in VariableDeclaration
+	public void foo(boolean x) {
+		a = "a" + 'c';  //should work, can add chars to strings
+		break;
+	}
+}
+
+

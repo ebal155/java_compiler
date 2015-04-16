@@ -1,0 +1,9 @@
+public class Test8 {
+	String a;
+	public void foo(boolean x) {
+		a = false;  // ERROR: incompatible types
+		break;
+	}
+}
+
+

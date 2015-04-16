@@ -84,6 +84,7 @@ import japa.parser.ast.stmt.TryStmt;
 import japa.parser.ast.stmt.TypeDeclarationStmt;
 import japa.parser.ast.stmt.WhileStmt;
 import japa.parser.ast.symtab.Scope;
+import japa.parser.ast.symtab.Symbol;
 import japa.parser.ast.type.ClassOrInterfaceType;
 import japa.parser.ast.type.PrimitiveType;
 import japa.parser.ast.type.ReferenceType;
@@ -316,21 +317,25 @@ public class TypeCheckVisitor implements VoidVisitor<Object>{
             n.getJavaDoc().accept(this, arg);
         }
         
-        Scope scope = n.getScope();
-        String type = n.getType().toString();
-        
-        if (scope.resolve(type) == null) {
-        	throw new A2SemanticsException(type + " is not a type");
-        }
-        
-        
         printMemberAnnotations(n.getAnnotations(), arg);
         printModifiers(n.getModifiers());
         n.getType().accept(this, arg);
 
         for (Iterator<VariableDeclarator> i = n.getVariables().iterator(); i.hasNext();) {
             VariableDeclarator var = i.next();
-            var.accept(this, arg);
+            
+            Scope scope = n.getScope();
+            String variableName = var.getId().toString();
+            
+            //Get the corresponding symbol of the variable with this name
+            Symbol symbol = scope.resolve(variableName);
+            String type = null;
+            
+            if (symbol.getType() != null){
+            	type = symbol.getType().getName();
+            }
+            
+            var.accept(this, type);
             if (i.hasNext()) {
             }
         }
@@ -387,7 +392,7 @@ public class TypeCheckVisitor implements VoidVisitor<Object>{
 
     public void visit(AssignExpr n, Object arg) {
         n.getTarget().accept(this, arg);
-        
+                
         switch (n.getOperator()) {
             case assign:
                 break;
@@ -415,7 +420,19 @@ public class TypeCheckVisitor implements VoidVisitor<Object>{
                 break;
         }
         
-        n.getValue().accept(this, arg);
+        Scope scope = n.getScope();
+        String variableName = n.getTarget().toString();
+        
+        //Get the corresponding symbol of the variable with this name
+        Symbol symbol = scope.resolve(variableName);
+        String type = null;
+        
+        if (symbol.getType() != null){
+        	type = symbol.getType().getName();
+        }
+        
+        //Passing in type to do type-checking in expressions
+        n.getValue().accept(this, type);
     }
 
     public void visit(BinaryExpr n, Object arg) {
@@ -492,12 +509,27 @@ public class TypeCheckVisitor implements VoidVisitor<Object>{
     }
 
     public void visit(CharLiteralExpr n, Object arg) {
+  	String type = (String) arg;
+    	
+    	if ((type != "String" && type != "char") || type == null) {
+    		throw new A2SemanticsException("Cannot assign char on line " + n.getBeginLine() + ", must assign a " + type);
+    	}
     }
 
     public void visit(DoubleLiteralExpr n, Object arg) {
+    	String type = (String) arg;
+    	
+    	if (type != "double" || type == null) {
+    		throw new A2SemanticsException("Cannot assign double on line " + n.getBeginLine() + ", must assign a " + type);
+    	}
     }
 
     public void visit(IntegerLiteralExpr n, Object arg) {
+    	String type = (String) arg;
+    	
+    	if ((type != "int" && type != "double") || type == null) {
+    		throw new A2SemanticsException("Cannot assign int on line " + n.getBeginLine() + ", must assign a " + type);
+    	}
     }
 
     public void visit(LongLiteralExpr n, Object arg) {
@@ -510,9 +542,19 @@ public class TypeCheckVisitor implements VoidVisitor<Object>{
     }
 
     public void visit(StringLiteralExpr n, Object arg) {
+    	String type = (String) arg;
+    	
+    	if (type != "String" || type == null) {
+    		throw new A2SemanticsException("Cannot assign \"" + n.getValue() + "\" on line " + n.getBeginLine() + ", must assign a " + type);
+    	}
     }
 
     public void visit(BooleanLiteralExpr n, Object arg) {
+    	String type = (String) arg;
+    	
+    	if (type != "boolean" || type == null) {
+    		throw new A2SemanticsException("Cannot assign \"" + n.getValue() + "\" on line " + n.getBeginLine() + ", must assign a " + type);
+    	}
     }
 
     public void visit(NullLiteralExpr n, Object arg) {
@@ -705,18 +747,23 @@ public class TypeCheckVisitor implements VoidVisitor<Object>{
     	printAnnotations(n.getAnnotations(), arg);
         printModifiers(n.getModifiers());
         
-        Scope scope = n.getScope();
-        String type = n.getType().toString();
-        
-        if (scope.resolve(type) == null) {
-        	throw new A2SemanticsException(type + " is not a type at line " + n.getBeginLine() + ", column " + n.getBeginColumn());
-        }
-        
         n.getType().accept(this, arg);    
         
         for (Iterator<VariableDeclarator> i = n.getVars().iterator(); i.hasNext();) {
             VariableDeclarator v = i.next();
-            v.accept(this, arg);
+            
+            Scope scope = n.getScope();
+            String variableName = v.getId().toString();
+            
+            //Get the corresponding symbol of the variable with this name
+            Symbol symbol = scope.resolve(variableName);
+            String type = null;
+            
+            if (symbol.getType() != null){
+            	type = symbol.getType().getName();
+            }
+            
+            v.accept(this, type);
             if (i.hasNext()) {
             }
         }

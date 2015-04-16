@@ -1,0 +1,6 @@
+public class Test6 {
+	public void bar() {
+		int b = a + c; // a and c out of scope
+	}
+}
+

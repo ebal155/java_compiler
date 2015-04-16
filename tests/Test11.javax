@@ -1,0 +1,9 @@
+public class Test11 {
+	int a;
+	public void foo(boolean x) {
+		a = 2 + 2.0;  //should not work, cannot add doubles to ints
+		break;
+	}
+}
+
+

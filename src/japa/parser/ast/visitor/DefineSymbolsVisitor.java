@@ -85,9 +85,13 @@ import japa.parser.ast.stmt.TypeDeclarationStmt;
 import japa.parser.ast.stmt.WhileStmt;
 import japa.parser.ast.symtab.BuiltInTypeSymbol;
 import japa.parser.ast.symtab.ClassSymbol;
+import japa.parser.ast.symtab.ClassType;
+import japa.parser.ast.symtab.GlobalScope;
 import japa.parser.ast.symtab.MethodSymbol;
 import japa.parser.ast.symtab.Scope;
+import japa.parser.ast.symtab.Symbol;
 import japa.parser.ast.symtab.SymtabType;
+import japa.parser.ast.symtab.TypeSymbol;
 import japa.parser.ast.symtab.VariableSymbol;
 import japa.parser.ast.type.ClassOrInterfaceType;
 import japa.parser.ast.type.PrimitiveType;
@@ -325,7 +329,24 @@ public class DefineSymbolsVisitor implements VoidVisitor<Object>{
         
         //go through variables and add them to the symbol table
         for(VariableDeclarator v: n.getVariables()) {
-            VariableSymbol b = new VariableSymbol(v.toString(), null);
+        	
+        	String stringType = n.getType().toString();
+        	GlobalScope globalScope = new GlobalScope();
+        	SymtabType type = null;
+        	
+        	
+        	if (globalScope.resolve(stringType) != null) {
+        		//If its a BuiltInJava type, define
+        		type = new BuiltInTypeSymbol(globalScope.resolve(stringType).getName());
+        	}else{
+        		//If its any other type, assume this type exists
+        		ClassType cType = new ClassType(stringType);
+        		type = new TypeSymbol(stringType,cType);
+        	}
+        	
+        	scope.define((Symbol) type);
+        	
+            VariableSymbol b = new VariableSymbol(v.getId().toString(), type);
             scope.define(b);
         }
         
@@ -712,8 +733,24 @@ public class DefineSymbolsVisitor implements VoidVisitor<Object>{
         
         //go through variables and add them to the symbol table
         for(VariableDeclarator v: n.getVars()) {
-            VariableSymbol b = new VariableSymbol(v.toString(), null);
+        	String stringType = n.getType().toString();
+        	GlobalScope globalScope = new GlobalScope();
+        	SymtabType type = null;
+        	
+        	if (globalScope.resolve(stringType) != null) {
+        		//If its a BuiltInJava type, define
+        		type = new BuiltInTypeSymbol(globalScope.resolve(stringType).getName());
+        	}else{
+        		//If its any other type, assume this type exists
+        		ClassType cType = new ClassType(stringType);
+        		type = new TypeSymbol(stringType,cType);
+        	}
+        	
+        	scope.define((Symbol) type);
+        	
+            VariableSymbol b = new VariableSymbol(v.getId().toString(), type);
             scope.define(b);
+            
         }
            
         n.getType().accept(this, arg);    

@@ -1,9 +1,12 @@
 public class Test1 {
 
-    boolean a;
+    innerbae a;
 
     public void foo(boolean x) {
-        a = "false";
+        a = "dude";
         break;
+    }
+
+    class innerbae {
     }
 }

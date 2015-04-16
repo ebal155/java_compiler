@@ -207,6 +207,8 @@ public final class CreateScopesVisitor implements VoidVisitor<Object> {
     }
 
     public void visit(CompilationUnit n, Object arg) {
+    	
+    	
         if (n.getPakage() != null) {
             n.getPakage().accept(this, arg);
         }
@@ -533,30 +535,39 @@ public final class CreateScopesVisitor implements VoidVisitor<Object> {
     }
 
     public void visit(CharLiteralExpr n, Object arg) {
+    	n.setScope(currentScope);
     }
 
     public void visit(DoubleLiteralExpr n, Object arg) {
+    	n.setScope(currentScope);
     }
 
     public void visit(IntegerLiteralExpr n, Object arg) {
+    	n.setScope(currentScope);
     }
 
     public void visit(LongLiteralExpr n, Object arg) {
+    	n.setScope(currentScope);
     }
 
     public void visit(IntegerLiteralMinValueExpr n, Object arg) {
+    	n.setScope(currentScope);
     }
 
     public void visit(LongLiteralMinValueExpr n, Object arg) {
+    	n.setScope(currentScope);
     }
 
     public void visit(StringLiteralExpr n, Object arg) {
+    	n.setScope(currentScope);
     }
 
     public void visit(BooleanLiteralExpr n, Object arg) {
+    	n.setScope(currentScope);
     }
 
     public void visit(NullLiteralExpr n, Object arg) {
+    	n.setScope(currentScope);
     }
 
     public void visit(ThisExpr n, Object arg) {
