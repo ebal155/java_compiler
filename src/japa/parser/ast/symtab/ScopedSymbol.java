@@ -1,8 +1,8 @@
 package japa.parser.ast.symtab;
 
-import japa.parser.ast.exceptions.ScopeException;
-
 import java.util.HashMap;
+
+import se701.A2SemanticsException;
 
 public abstract class ScopedSymbol extends Symbol implements Scope {
 
@@ -29,7 +29,7 @@ public abstract class ScopedSymbol extends Symbol implements Scope {
 		String name = symbol.getName();
 		if (symbols.get(name) != null) {
 			try {
-				throw new ScopeException("\""+name+"\" is already defined in scope "+getScopeName());
+				throw new A2SemanticsException("\""+name+"\" is already defined in scope "+getScopeName());
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

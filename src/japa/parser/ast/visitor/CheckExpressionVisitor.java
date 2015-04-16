@@ -26,7 +26,6 @@ import japa.parser.ast.body.Parameter;
 import japa.parser.ast.body.TypeDeclaration;
 import japa.parser.ast.body.VariableDeclarator;
 import japa.parser.ast.body.VariableDeclaratorId;
-import japa.parser.ast.exceptions.ScopeException;
 import japa.parser.ast.expr.AnnotationExpr;
 import japa.parser.ast.expr.ArrayAccessExpr;
 import japa.parser.ast.expr.ArrayCreationExpr;
@@ -196,6 +195,15 @@ public class CheckExpressionVisitor implements VoidVisitor<Object>{
     }
 
     public void visit(NameExpr n, Object arg) {
+    	Scope scope = n.getScope();
+    	
+    	if (scope != null) {
+	    	if (scope.resolve(n.getName()) != null) {
+				System.out.println(scope.resolve(n.getName()).getName() + " is in scope");
+			}else{
+				System.out.println("Variable " + n.getName() + " is outside of scope");
+			}
+    	}
     }
 
     public void visit(QualifiedNameExpr n, Object arg) {
@@ -380,49 +388,6 @@ public class CheckExpressionVisitor implements VoidVisitor<Object>{
 
     public void visit(AssignExpr n, Object arg) {
         n.getTarget().accept(this, arg);
-
-        ArrayList<String> symbolsToCheck = new ArrayList<String>();
-        
-        //Add the left side of the assignment
-        symbolsToCheck.add(n.getTarget().toString());
-        
-        //If the expression is a direct assignment (e.g. c = a;), 
-        //then just get the single value to add to the symbol list to check
-		if (n.getValue() instanceof NameExpr) {
-			symbolsToCheck.add(n.getValue().toString());
-		}else{
-			
-		//Else do operation for BinaryExpr	
-			String[] parts;
-			String stringToSplit = ((BinaryExpr) n.getValue()).getLeft().toString();
-
-			//Check if the left side of the binary expression contains more than one variable
-			//Note: right side of the binary expression is always 1 variable
-			if(stringToSplit.length() > 1) {
-				parts = stringToSplit.split("[\\+]");
-				
-				for (String s : parts) {
-					s = s.replaceAll("\\s+",""); 
-					symbolsToCheck.add(s);
-				}
-			
-			}else{
-				symbolsToCheck.add(((BinaryExpr) n.getValue()).getLeft().toString());
-			}
-			
-			symbolsToCheck.add(((BinaryExpr) n.getValue()).getRight().toString());
-		}
-
-        Scope scope = n.getScope();
-        
-        for (String s: symbolsToCheck) {
-        	if (scope.resolve(s) != null) {
-        		System.out.println(scope.resolve(s).getName() + " is in scope");
-        	}else{
-        		System.out.println("Variable " + s + " is outside of scope");
-        	}
-        }
-        
         
         switch (n.getOperator()) {
             case assign:
@@ -450,8 +415,6 @@ public class CheckExpressionVisitor implements VoidVisitor<Object>{
             case rUnsignedShift:
                 break;
         }
-        
-        
         
         n.getValue().accept(this, arg);
     }

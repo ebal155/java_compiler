@@ -2,31 +2,18 @@ package se701;
 
 public class StudentSample {
 
-    int c;
-
-    int k;
-
-    int x;
-
-    int z;
+    boolean c;
 
 
 
     public static void main(String[] args) {
-        int a;
-        int b;
-        while (true) {
-            int FORLOOP;
-            checking = cc;
-            FORLOOP = a + b;
-        }
-        c = f + s - asd * b;
-        k = x + z;
+        c = false;
+        c = 5;
+        c = c + 5 + k + d + r;
+        c = a + b;
     }
 
     public void add(int a, int b) {
-        int b;
-        int f;
-        c = a + b;
+        b = true;
     }
 }
