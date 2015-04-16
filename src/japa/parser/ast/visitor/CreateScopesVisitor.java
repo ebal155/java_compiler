@@ -106,6 +106,7 @@ import japa.parser.ast.stmt.TryStmt;
 import japa.parser.ast.stmt.TypeDeclarationStmt;
 import japa.parser.ast.stmt.WhileStmt;
 import japa.parser.ast.symtab.ClassSymbol;
+import japa.parser.ast.symtab.GlobalScope;
 import japa.parser.ast.symtab.MethodSymbol;
 import japa.parser.ast.symtab.Scope;
 import japa.parser.ast.symtab.StatementSymbol;
@@ -126,7 +127,7 @@ import java.util.List;
 
 public final class CreateScopesVisitor implements VoidVisitor<Object> {
 
-	Scope currentScope = null;
+	Scope currentScope = new GlobalScope();
 	private int forLoopId = 0;
 	private int whileLoopId = 0;
 	private int ifStmtId = 0;
@@ -258,14 +259,8 @@ public final class CreateScopesVisitor implements VoidVisitor<Object> {
         	
         } else {
         	
-        	
-        	if (currentScope == null) {
-	        	//Create a new ClassSymbol and set it as current scope
-	        	scope = new ClassSymbol(n.getName(),null);
-        	}else{
-        		scope = new ClassSymbol(n.getName(),currentScope);
-        	}
-        	
+    		scope = new ClassSymbol(n.getName(),currentScope);
+
         	currentScope = scope;
         	n.setScope(currentScope);
         	

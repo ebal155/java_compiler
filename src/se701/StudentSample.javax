@@ -4,6 +4,7 @@ public class StudentSample {
 
 	//Hello
 	
+	int check;
 	boolean c;
 	
 	public static delegate void hello(int a, int b);

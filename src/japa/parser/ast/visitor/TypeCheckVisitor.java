@@ -90,11 +90,12 @@ import japa.parser.ast.type.ReferenceType;
 import japa.parser.ast.type.Type;
 import japa.parser.ast.type.VoidType;
 import japa.parser.ast.type.WildcardType;
+
 import java.util.Iterator;
 import java.util.List;
 
-public class CheckExpressionVisitor implements VoidVisitor<Object>{
-	
+public class TypeCheckVisitor implements VoidVisitor<Object>{
+
 	private void printModifiers(int modifiers) {
         if (ModifierSet.isPrivate(modifiers)) {
         }
@@ -192,13 +193,6 @@ public class CheckExpressionVisitor implements VoidVisitor<Object>{
     }
 
     public void visit(NameExpr n, Object arg) {
-    	Scope scope = n.getScope();
-    	
-    	if (scope.resolve(n.getName()) != null) {
-//			System.out.println(scope.resolve(n.getName()).getName() + " is in scope");
-		}else{
-//			System.out.println("Variable " + n.getName() + " is outside of scope");
-		}
     }
 
     public void visit(QualifiedNameExpr n, Object arg) {

@@ -12,6 +12,7 @@ import japa.parser.ast.visitor.CheckExpressionVisitor;
 import japa.parser.ast.visitor.CreateScopesVisitor;
 import japa.parser.ast.visitor.DefineSymbolsVisitor;
 import japa.parser.ast.visitor.SourceToSourceVisitor;
+import japa.parser.ast.visitor.TypeCheckVisitor;
 
 public class A2Compiler {
 	
@@ -33,6 +34,9 @@ public class A2Compiler {
 		
 		DefineSymbolsVisitor defineSymbolsVisitor = new DefineSymbolsVisitor();
 		ast.accept(defineSymbolsVisitor, null);
+		
+		TypeCheckVisitor typeCheckVisitor = new TypeCheckVisitor();
+		ast.accept(typeCheckVisitor, null);
 		
 		CheckExpressionVisitor checkExpressionVisitor = new CheckExpressionVisitor();
 		ast.accept(checkExpressionVisitor, null);

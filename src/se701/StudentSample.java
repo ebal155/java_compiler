@@ -2,6 +2,8 @@ package se701;
 
 public class StudentSample {
 
+    int check;
+
     boolean c;
 
 
