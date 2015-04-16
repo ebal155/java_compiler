@@ -6,10 +6,12 @@ public class StudentSample {
 	
 	int check;
 	boolean c;
+	int asdf;
 	
 	public static delegate void hello(int a, int b);
 	
 	public static void main(String[] args) {
+		test k;
 		c = false;
 		c = 5;
 		c = c + 5 + k + d + r;

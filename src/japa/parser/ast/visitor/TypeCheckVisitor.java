@@ -94,6 +94,8 @@ import japa.parser.ast.type.WildcardType;
 import java.util.Iterator;
 import java.util.List;
 
+import se701.A2SemanticsException;
+
 public class TypeCheckVisitor implements VoidVisitor<Object>{
 
 	private void printModifiers(int modifiers) {
@@ -313,6 +315,14 @@ public class TypeCheckVisitor implements VoidVisitor<Object>{
         if (n.getJavaDoc() != null) {
             n.getJavaDoc().accept(this, arg);
         }
+        
+        Scope scope = n.getScope();
+        String type = n.getType().toString();
+        
+        if (scope.resolve(type) == null) {
+        	throw new A2SemanticsException(type + " is not a type");
+        }
+        
         
         printMemberAnnotations(n.getAnnotations(), arg);
         printModifiers(n.getModifiers());
@@ -694,6 +704,13 @@ public class TypeCheckVisitor implements VoidVisitor<Object>{
     public void visit(VariableDeclarationExpr n, Object arg) {
     	printAnnotations(n.getAnnotations(), arg);
         printModifiers(n.getModifiers());
+        
+        Scope scope = n.getScope();
+        String type = n.getType().toString();
+        
+        if (scope.resolve(type) == null) {
+        	throw new A2SemanticsException(type + " is not a type at line " + n.getBeginLine() + ", column " + n.getBeginColumn());
+        }
         
         n.getType().accept(this, arg);    
         

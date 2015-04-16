@@ -6,6 +6,8 @@ public class StudentSample {
 
     boolean c;
 
+    int asdf;
+
 
 
     public static void main(String[] args) {
