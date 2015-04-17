@@ -1,16 +1,11 @@
-package se701;
+public class Test4 {
 
-public class StudentSample {
-
-    public void hue() {
-        int lel = 5;
-    }
-
-    class Dog {
-    	int lel = 20;
-    }
-    
-    class Meg { }
-
-    Dog dog;
+	int a;
+	int b;
+	int c;
+	int d;
+	
+	public void bar(int a, String b) {
+		a = b + c + d;
+	}
 }

@@ -103,6 +103,8 @@ import japa.parser.ast.type.WildcardType;
 import java.util.Iterator;
 import java.util.List;
 
+import se701.A2SemanticsException;
+
 public class DefineSymbolsVisitor implements VoidVisitor<Object>{
 	
 	private void printModifiers(int modifiers) {
@@ -339,9 +341,14 @@ public class DefineSymbolsVisitor implements VoidVisitor<Object>{
         		//If its a BuiltInJava type, define
         		type = new BuiltInTypeSymbol(globalScope.resolve(stringType).getName());
         	}else{
-        		//If its any other type, assume this type exists
-        		ClassType cType = new ClassType(stringType);
-        		type = new TypeSymbol(stringType,cType);
+        		//Check if this type is defined as a class
+        		if (scope.resolve(stringType) != null) {
+        			ClassType cType = new ClassType(stringType);
+        			type = new TypeSymbol(stringType,cType);
+        		}else{
+        		//type doesnt exist
+        			throw new A2SemanticsException(stringType + " is not a defined type on line " + n.getBeginLine());
+        		}
         	}
         	
             VariableSymbol b = new VariableSymbol(v.getId().toString(), type);
@@ -757,9 +764,14 @@ public class DefineSymbolsVisitor implements VoidVisitor<Object>{
         		//If its a BuiltInJava type, define
         		type = new BuiltInTypeSymbol(globalScope.resolve(stringType).getName());
         	}else{
-        		//If its any other type, assume this type exists
-        		ClassType cType = new ClassType(stringType);
-        		type = new TypeSymbol(stringType,cType);
+        		//Check if this type is defined as a class
+        		if (scope.resolve(stringType) != null) {
+        			ClassType cType = new ClassType(stringType);
+        			type = new TypeSymbol(stringType,cType);
+        		}else{
+        		//Otherwise type doesnt exist
+        			throw new A2SemanticsException(stringType + " is not a defined type on line " + n.getBeginLine());
+        		}
         	}
         	
             VariableSymbol b = new VariableSymbol(v.getId().toString(), type);

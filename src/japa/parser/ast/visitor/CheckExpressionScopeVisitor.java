@@ -671,8 +671,6 @@ public class CheckExpressionScopeVisitor implements VoidVisitor<Object>{
         } else {
             n.getBody().accept(this, arg);
         }
-        
-		
     }
 
     public void visit(Parameter n, Object arg) {
@@ -682,6 +680,7 @@ public class CheckExpressionScopeVisitor implements VoidVisitor<Object>{
         n.getType().accept(this, arg);
         if (n.isVarArgs()) {
         }
+        
         n.getId().accept(this, arg);
     }
 
