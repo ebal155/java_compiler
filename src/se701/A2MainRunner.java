@@ -17,34 +17,15 @@ public class A2MainRunner {
 		 
 		for (int i = 1; i <= 20; i++) { 
 			String file = "tests"+System.getProperty("file.separator")+"Test"+i+".javax";
-			
-			BufferedReader br = null;
-			
-			try {
-				br = new BufferedReader(new FileReader(file));
-			} catch (FileNotFoundException e2) {
-			}
-			
-			String flag = null;
-			
-			try {
-				flag = br.readLine();
-			} catch (IOException e1) {
-			}
-			
 			try {
 				A2Compiler.compile(new File(file));
-				System.out.println(file+" ... OK");
+				System.out.println(file + "...OK");
 			} catch (ParseException e) {
 				System.err.println(file+" Parser exception... "+e.getMessage());
 				e.printStackTrace();
 			} catch (A2SemanticsException e) {
-				if (flag.equals("//FAIL")) {
-					System.out.println(file+" ... OK");
-				}else{
-					System.err.println(file+" Semantics exception... "+e.getMessage());
-					e.printStackTrace();
-				}
+				System.err.println(file+" Semantics exception... "+e.getMessage());
+				e.printStackTrace();
 			}  catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
