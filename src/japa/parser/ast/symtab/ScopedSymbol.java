@@ -28,12 +28,7 @@ public abstract class ScopedSymbol extends Symbol implements Scope {
 	public void define(Symbol symbol) {
 		String name = symbol.getName();
 		if (symbols.get(name) != null) {
-			try {
-				throw new A2SemanticsException("\""+name+"\" is already defined in scope "+getScopeName());
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			throw new A2SemanticsException("\""+name+"\" is already defined in scope "+getScopeName());
 		}
 		symbols.put(name, symbol);
 	}
