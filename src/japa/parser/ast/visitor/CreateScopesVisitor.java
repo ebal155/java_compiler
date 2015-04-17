@@ -109,7 +109,7 @@ import japa.parser.ast.symtab.ClassSymbol;
 import japa.parser.ast.symtab.GlobalScope;
 import japa.parser.ast.symtab.MethodSymbol;
 import japa.parser.ast.symtab.Scope;
-import japa.parser.ast.symtab.StatementSymbol;
+import japa.parser.ast.symtab.BlockSymbol;
 import japa.parser.ast.symtab.SymtabType;
 import japa.parser.ast.type.ClassOrInterfaceType;
 import japa.parser.ast.type.PrimitiveType;
@@ -128,10 +128,6 @@ import java.util.List;
 public final class CreateScopesVisitor implements VoidVisitor<Object> {
 
 	Scope currentScope = new GlobalScope();
-	private int forLoopId = 0;
-	private int whileLoopId = 0;
-	private int ifStmtId = 0;
-
 
     private void printModifiers(int modifiers) {
         if (ModifierSet.isPrivate(modifiers)) {
@@ -726,7 +722,7 @@ public final class CreateScopesVisitor implements VoidVisitor<Object> {
         }
         if (n.getBody() == null) {
         } else {
-            n.getBody().accept(this, arg);
+            n.getBody().accept(this, false);
         }
         
         currentScope = methodSymbol.getEnclosingScope();
@@ -790,12 +786,30 @@ public final class CreateScopesVisitor implements VoidVisitor<Object> {
     }
 
     public void visit(BlockStmt n, Object arg) {
+    	
+    	Scope blockSymbol = null;
+    	
+        if (arg == null) {
+        	System.out.println("here");
+        	
+	        //Create a Statement and set it as a current scope
+	        Scope enclosingScope = currentScope; //scope above
+	        
+	        blockSymbol = new BlockSymbol(enclosingScope);
+	        
+	        currentScope = blockSymbol;
+	        n.setScope(currentScope);
+        }
+       
         if (n.getStmts() != null) {
             for (Statement s : n.getStmts()) {
                 s.accept(this, arg);
             }
         }
-
+        
+        if (arg == null) {
+        	currentScope = blockSymbol.getEnclosingScope();
+        }
     }
 
     public void visit(LabeledStmt n, Object arg) {
@@ -913,44 +927,16 @@ public final class CreateScopesVisitor implements VoidVisitor<Object> {
     public void visit(IfStmt n, Object arg) {
         n.getCondition().accept(this, arg);
         n.getThenStmt().accept(this, arg);
-        
-        //Create a Statement and set it as a current scope
-        //Use Id + keyword "for" to keep track of for loops
-        String scopeName = "if" + ifStmtId; //name of method
-        ifStmtId++;
-        SymtabType type =  null; //return type
-        Scope enclosingScope = currentScope; //scope above
-        
-        Scope statementSymbol = new StatementSymbol(scopeName, enclosingScope);
-        
-        currentScope = statementSymbol;
-        n.setScope(currentScope);
-        
+    
         if (n.getElseStmt() != null) {
             n.getElseStmt().accept(this, arg);
         }
-        
-        currentScope = statementSymbol.getEnclosingScope();
 
     }
 
     public void visit(WhileStmt n, Object arg) {
         n.getCondition().accept(this, arg);
-        
-        //Create a Statement and set it as a current scope
-        //Use Id + keyword "for" to keep track of for loops
-        String scopeName = "while" + whileLoopId; //name of method
-        whileLoopId++;
-        SymtabType type =  null; //return type
-        Scope enclosingScope = currentScope; //scope above
-        
-        Scope statementSymbol = new StatementSymbol(scopeName, enclosingScope);
-        
-        currentScope = statementSymbol;
-        n.setScope(currentScope);
-        
-        currentScope = statementSymbol.getEnclosingScope();
-        
+
         n.getBody().accept(this, arg);
     }
 
@@ -992,21 +978,8 @@ public final class CreateScopesVisitor implements VoidVisitor<Object> {
             }
         }
         
-        //Create a Statement and set it as a current scope
-        //Use Id + keyword "for" to keep track of for loops
-        String scopeName = "for" + forLoopId; //name of method
-        forLoopId++;
-        SymtabType type =  null; //return type
-        Scope enclosingScope = currentScope; //scope above
-        
-        Scope statementSymbol = new StatementSymbol(scopeName, enclosingScope);
-        
-        currentScope = statementSymbol;
-        n.setScope(currentScope);
-        
         n.getBody().accept(this, arg);
-        
-        currentScope = statementSymbol.getEnclosingScope();
+
         
     }
 

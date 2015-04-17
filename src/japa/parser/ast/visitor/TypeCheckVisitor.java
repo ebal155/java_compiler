@@ -511,7 +511,7 @@ public class TypeCheckVisitor implements VoidVisitor<Object>{
     public void visit(CharLiteralExpr n, Object arg) {
   	String type = (String) arg;
     	
-    	if ((type != "String" && type != "char") || type == null) {
+    	if (type != "String" && type != "char") {
     		throw new A2SemanticsException("Cannot assign char on line " + n.getBeginLine() + ", must assign a " + type);
     	}
     }
@@ -519,7 +519,7 @@ public class TypeCheckVisitor implements VoidVisitor<Object>{
     public void visit(DoubleLiteralExpr n, Object arg) {
     	String type = (String) arg;
     	
-    	if (type != "double" || type == null) {
+    	if (type != "double") {
     		throw new A2SemanticsException("Cannot assign double on line " + n.getBeginLine() + ", must assign a " + type);
     	}
     }
@@ -527,7 +527,7 @@ public class TypeCheckVisitor implements VoidVisitor<Object>{
     public void visit(IntegerLiteralExpr n, Object arg) {
     	String type = (String) arg;
     	
-    	if ((type != "int" && type != "double") || type == null) {
+    	if (type != "int" && type != "double") {
     		throw new A2SemanticsException("Cannot assign int on line " + n.getBeginLine() + ", must assign a " + type);
     	}
     }
@@ -544,7 +544,7 @@ public class TypeCheckVisitor implements VoidVisitor<Object>{
     public void visit(StringLiteralExpr n, Object arg) {
     	String type = (String) arg;
     	
-    	if (type != "String" || type == null) {
+    	if (type != "String") {
     		throw new A2SemanticsException("Cannot assign \"" + n.getValue() + "\" on line " + n.getBeginLine() + ", must assign a " + type);
     	}
     }
@@ -552,7 +552,7 @@ public class TypeCheckVisitor implements VoidVisitor<Object>{
     public void visit(BooleanLiteralExpr n, Object arg) {
     	String type = (String) arg;
     	
-    	if (type != "boolean" || type == null) {
+    	if (type != "boolean") {
     		throw new A2SemanticsException("Cannot assign \"" + n.getValue() + "\" on line " + n.getBeginLine() + ", must assign a " + type);
     	}
     }

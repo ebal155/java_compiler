@@ -1,9 +1,11 @@
-public class Test1 {
+public class StudentSample {
 
-    boolean a;
+    {
+        int bar;
+    }
 
-    public void foo(boolean x) {
-        a = "false";
-        break;
+    public void hue() {
+        bar = 10;
+        int dasd = 5;
     }
 }

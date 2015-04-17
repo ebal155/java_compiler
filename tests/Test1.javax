@@ -1,9 +1,13 @@
-public class Test1 {
-	boolean a;
-	public void foo(boolean x) {
-		a = "false";  // ERROR: incompatible types
-		break;
+public class StudentSample {
+
+	{
+	int bar;
 	}
+	
+	public void hue() {
+		bar = 10;
+		int dasd = 5;
+		
+	}
+
 }
-
-
