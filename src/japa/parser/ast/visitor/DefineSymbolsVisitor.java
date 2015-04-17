@@ -848,6 +848,7 @@ public class DefineSymbolsVisitor implements VoidVisitor<Object>{
     }
 
     public void visit(ReturnStmt n, Object arg) {
+    	
         if (n.getExpr() != null) {
             n.getExpr().accept(this, arg);
         }

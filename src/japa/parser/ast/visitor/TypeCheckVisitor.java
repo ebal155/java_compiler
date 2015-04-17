@@ -516,26 +516,39 @@ public class TypeCheckVisitor implements VoidVisitor<Object>{
     }
 
     public void visit(CharLiteralExpr n, Object arg) {
-  	String type = (String) arg;
+    	String type = null;
     	
-    	if (type != "String" && type != "char") {
-    		throw new A2SemanticsException("Cannot assign char on line " + n.getBeginLine() + ", must assign a " + type);
-    	}
+  		if (!((arg instanceof ReferenceType) || (arg instanceof VoidType))) {
+    	type = (String) arg;
+
+	    	if (type != "String" && type != "char") {
+	    		throw new A2SemanticsException("Cannot assign char on line " + n.getBeginLine() + ", must assign a " + type);
+	    	}
+	  	}
     }
 
     public void visit(DoubleLiteralExpr n, Object arg) {
-    	String type = (String) arg;
+    	String type = null;
     	
-    	if (type != "double") {
-    		throw new A2SemanticsException("Cannot assign double on line " + n.getBeginLine() + ", must assign a " + type);
+    	if (!((arg instanceof ReferenceType) || (arg instanceof VoidType))) {
+    		
+        	type = (String) arg;
+    		
+	    	if (type != "double") {
+	    		throw new A2SemanticsException("Cannot assign double on line " + n.getBeginLine() + ", must assign a " + type);
+	    	}
     	}
     }
 
     public void visit(IntegerLiteralExpr n, Object arg) {
-    	String type = (String) arg;
+    	String type = null;
     	
-    	if (type != "int" && type != "double") {
-    		throw new A2SemanticsException("Cannot assign int on line " + n.getBeginLine() + ", must assign a " + type);
+    	if (!((arg instanceof ReferenceType) || (arg instanceof VoidType))) {
+        	type = (String) arg;
+
+	    	if (type != "int" && type != "double") {
+	    		throw new A2SemanticsException("Cannot assign int on line " + n.getBeginLine() + ", must assign a " + type);
+	    	}
     	}
     }
 
@@ -551,7 +564,7 @@ public class TypeCheckVisitor implements VoidVisitor<Object>{
     public void visit(StringLiteralExpr n, Object arg) {
     	String type = null;
     	
-    	if (!(arg instanceof ReferenceType)) {
+    	if (!((arg instanceof ReferenceType) || (arg instanceof VoidType))) {
 	    	type = (String) arg;
 	    	
 	    	if (type != "String") {
@@ -561,10 +574,15 @@ public class TypeCheckVisitor implements VoidVisitor<Object>{
     }
 
     public void visit(BooleanLiteralExpr n, Object arg) {
-    	String type = (String) arg;
+    	String type = null;
     	
-    	if (type != "boolean") {
-    		throw new A2SemanticsException("Cannot assign \"" + n.getValue() + "\" on line " + n.getBeginLine() + ", must assign a " + type);
+    	if (!((arg instanceof ReferenceType) || (arg instanceof VoidType))) {
+    		
+        	type = (String) arg;
+    		
+	    	if (type != "boolean") {
+	    		throw new A2SemanticsException("Cannot assign \"" + n.getValue() + "\" on line " + n.getBeginLine() + ", must assign a " + type);
+	    	}
     	}
     }
 
@@ -851,9 +869,7 @@ public class TypeCheckVisitor implements VoidVisitor<Object>{
     }
 
     public void visit(ReturnStmt n, Object arg) {
-    	
     	Scope scope = n.getScope();
-    	
     	
     	String expectedReturnTypeString = arg.toString();
     	String actualReturnTypeString = null;

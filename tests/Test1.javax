@@ -1,9 +1,14 @@
 //FAIL
 public class Test1 {
-	boolean a;
+	boolean b;
+	
 	public void foo(boolean x) {
-		a = "false";  // ERROR: incompatible types
-		break;
+	
+		for (int i = 0; i<5; i++){
+			int c;
+		}
+		
+		c=5;
 	}
 }
 

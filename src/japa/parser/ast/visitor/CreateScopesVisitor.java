@@ -736,6 +736,7 @@ public final class CreateScopesVisitor implements VoidVisitor<Object> {
                 }
             }
         }
+        
         if (n.getBody() == null) {
         } else {
             n.getBody().accept(this, false);
@@ -809,7 +810,6 @@ public final class CreateScopesVisitor implements VoidVisitor<Object> {
     	Scope blockSymbol = null;
     	
         if (arg == null) {
-        	
 	        //Create a Statement and set it as a current scope
 	        Scope enclosingScope = currentScope; //scope above
 	        
@@ -821,7 +821,8 @@ public final class CreateScopesVisitor implements VoidVisitor<Object> {
        
         if (n.getStmts() != null) {
             for (Statement s : n.getStmts()) {
-                s.accept(this, arg);
+            	Object arg0 = null;
+                s.accept(this, arg0);
             }
         }
         
