@@ -1,11 +1,10 @@
-public class Test4 {
-
-	int a;
-	int b;
-	int c;
-	int d;
-	
-	public void bar(int a, String b) {
-		a = b + c + d;
+//FAIL
+public class Test1 {
+	boolean a;
+	public void foo(boolean x) {
+		a = "false";  // ERROR: incompatible types
+		break;
 	}
 }
+
+

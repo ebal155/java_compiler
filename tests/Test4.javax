@@ -1,6 +1,7 @@
+//FAIL
 public class Test4 {
-	public dog bar() {
+	public void bar() {
 		int b = 456;
-		return b; //void method test
+		return b; //void method
 	}
 }

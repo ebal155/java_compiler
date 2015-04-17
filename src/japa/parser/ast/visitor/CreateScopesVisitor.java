@@ -105,7 +105,9 @@ import japa.parser.ast.stmt.ThrowStmt;
 import japa.parser.ast.stmt.TryStmt;
 import japa.parser.ast.stmt.TypeDeclarationStmt;
 import japa.parser.ast.stmt.WhileStmt;
+import japa.parser.ast.symtab.BuiltInTypeSymbol;
 import japa.parser.ast.symtab.ClassSymbol;
+import japa.parser.ast.symtab.ClassType;
 import japa.parser.ast.symtab.GlobalScope;
 import japa.parser.ast.symtab.MethodSymbol;
 import japa.parser.ast.symtab.Scope;
@@ -693,17 +695,27 @@ public final class CreateScopesVisitor implements VoidVisitor<Object> {
 
         n.getType().accept(this, arg);     
         
+        GlobalScope globalscope = new GlobalScope();
+        
+
+        
         //Create a MethodSymbol and set it as a current scope
         String scopeName = n.getName(); //name of method
-        SymtabType type =  null; //return type, doesn't matter when creating scopes
+        SymtabType type =  null; //return type
         Scope enclosingScope = currentScope; //scope above
+                
+        if (globalscope.resolve(n.getType().toString()) != null) {
+        	type = new BuiltInTypeSymbol(n.getType().toString());
+        }else{
+        	type = new ClassType(n.getType().toString());
+        }
         
         MethodSymbol methodSymbol = new MethodSymbol(scopeName, type, enclosingScope);
-        
         currentScope = methodSymbol;
         n.setScope(currentScope);
         
-
+        currentScope.getEnclosingScope().define(methodSymbol);
+        
         if (n.getParameters() != null) {
             for (Iterator<Parameter> i = n.getParameters().iterator(); i.hasNext();) {
                 Parameter p = i.next();

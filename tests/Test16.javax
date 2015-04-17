@@ -1,6 +1,12 @@
-public class Test16 {
-	public dog bar() {
-		dog b = new dog(); //should work, testing compatible method return types
-		return b;
+//FAIL
+public class Test5 {
+	int c;
+	
+	public void add(int a, int b) {
+		int a; // should fail, a already defined;
+		c = 3;
 	}
+	public void huehue() {
+    }
 }
+

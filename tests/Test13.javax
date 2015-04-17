@@ -1,3 +1,4 @@
+//PASS
 public class Test13 {
 	String a = "test"; //getId() shit in VariableDeclaration
 	public void foo(boolean x) {

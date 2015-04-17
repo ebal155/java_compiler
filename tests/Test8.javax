@@ -1,3 +1,4 @@
+//FAIL
 public class Test8 {
 	String a;
 	public void foo(boolean x) {

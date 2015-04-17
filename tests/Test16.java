@@ -1,7 +1,12 @@
-public class Test16 {
+public class Test5 {
 
-    public dog bar() {
-        dog b = new dog();
-        return b;
+    int c;
+
+    public void add(int a, int b) {
+        int a;
+        c = 3;
+    }
+
+    public void huehue() {
     }
 }

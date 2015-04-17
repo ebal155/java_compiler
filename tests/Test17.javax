@@ -1,0 +1,11 @@
+//FAIL
+public class Test4 {
+	int a;
+	public void bar() {
+		a = 2;
+		int c = 3;
+		int b = c + a;
+		return "i heard you love to show off"; // should fail, return is void
+	}
+}
+

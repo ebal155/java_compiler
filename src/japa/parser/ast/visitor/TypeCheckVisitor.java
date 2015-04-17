@@ -176,6 +176,8 @@ public class TypeCheckVisitor implements VoidVisitor<Object>{
     }
 
     public void visit(CompilationUnit n, Object arg) {
+    	
+    	
         if (n.getPakage() != null) {
             n.getPakage().accept(this, arg);
         }
@@ -434,12 +436,13 @@ public class TypeCheckVisitor implements VoidVisitor<Object>{
         if (symbol.getType() != null){
         	type = symbol.getType().getName();
         }
-        
+                
         //Passing in type to do type-checking in expressions
         n.getValue().accept(this, type);
     }
 
     public void visit(BinaryExpr n, Object arg) {
+    	
         n.getLeft().accept(this, arg);
         switch (n.getOperator()) {
             case or:
@@ -546,10 +549,14 @@ public class TypeCheckVisitor implements VoidVisitor<Object>{
     }
 
     public void visit(StringLiteralExpr n, Object arg) {
-    	String type = (String) arg;
+    	String type = null;
     	
-    	if (type != "String") {
-    		throw new A2SemanticsException("Cannot assign \"" + n.getValue() + "\" on line " + n.getBeginLine() + ", must assign a " + type);
+    	if (!(arg instanceof ReferenceType)) {
+	    	type = (String) arg;
+	    	
+	    	if (type != "String") {
+	    		throw new A2SemanticsException("Cannot assign \"" + n.getValue() + "\" on line " + n.getBeginLine() + ", must assign a " + type);
+	    	}
     	}
     }
 
@@ -748,14 +755,14 @@ public class TypeCheckVisitor implements VoidVisitor<Object>{
     }
 
     public void visit(VariableDeclarationExpr n, Object arg) {
+    	
     	printAnnotations(n.getAnnotations(), arg);
         printModifiers(n.getModifiers());
-        
+                
         n.getType().accept(this, arg);    
         
         for (Iterator<VariableDeclarator> i = n.getVars().iterator(); i.hasNext();) {
             VariableDeclarator v = i.next();
-            
             Scope scope = n.getScope();
             String variableName = v.getId().toString();
             
@@ -765,6 +772,18 @@ public class TypeCheckVisitor implements VoidVisitor<Object>{
             
             if (symbol.getType() != null){
             	type = symbol.getType().getName();
+            }
+                    
+            if (v.getInit() instanceof MethodCallExpr) {
+            	
+            	String methodName = v.getInit().toString().replace("()","");
+            	
+            	Symbol methodSymbol = scope.getEnclosingScope().resolve(methodName);
+            	String returnType = methodSymbol.getType().getName();
+            	
+            	if (type != returnType) {
+            		throw new A2SemanticsException("Cannot assign " + returnType + " to a " + type + " at line " + n.getBeginLine());
+            	}
             }
             
             v.accept(this, type);
@@ -835,20 +854,23 @@ public class TypeCheckVisitor implements VoidVisitor<Object>{
     	
     	Scope scope = n.getScope();
     	
+    	
     	String expectedReturnTypeString = arg.toString();
-    	SymtabType actualReturnType = scope.resolve(n.getExpr().toString()).getType();
     	String actualReturnTypeString = null;
-    	
-    	if (actualReturnType instanceof TypeSymbol) {
-    		TypeSymbol temp = (TypeSymbol) actualReturnType;
-    		actualReturnTypeString = actualReturnType.getName();
-    	}else if (actualReturnType instanceof BuiltInTypeSymbol) {
-    		BuiltInTypeSymbol temp = (BuiltInTypeSymbol) actualReturnType;
-    		actualReturnTypeString = actualReturnType.getName();    		
-    	}
-    	
-    	if (!(actualReturnTypeString.equals(expectedReturnTypeString))) {
-    		throw new A2SemanticsException("invalid return type: " + actualReturnTypeString  + ", need " + expectedReturnTypeString);
+    	if (n.getExpr() instanceof NameExpr) {
+	    	SymtabType actualReturnType = scope.resolve(n.getExpr().toString()).getType();
+	    	
+	    	if (actualReturnType instanceof TypeSymbol) {
+	    		TypeSymbol temp = (TypeSymbol) actualReturnType;
+	    		actualReturnTypeString = actualReturnType.getName();
+	    	}else if (actualReturnType instanceof BuiltInTypeSymbol) {
+	    		BuiltInTypeSymbol temp = (BuiltInTypeSymbol) actualReturnType;
+	    		actualReturnTypeString = actualReturnType.getName();    		
+	    	}
+	    	
+	    	if (!(actualReturnTypeString.equals(expectedReturnTypeString))) {
+	    		throw new A2SemanticsException("invalid return type: " + actualReturnTypeString  + ", need " + expectedReturnTypeString);
+	    	}
     	}
     	
         if (n.getExpr() != null) {

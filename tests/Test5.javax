@@ -1,3 +1,4 @@
+//FAIL
 public class Test5 {
 	int c;
 	

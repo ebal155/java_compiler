@@ -1,7 +1,10 @@
 package se701;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 
 import japa.parser.ParseException;
 
@@ -12,8 +15,23 @@ public class A2MainRunner {
 	
 		/* These tests will be testing correctness of your Semantic Analysis visitors. The marker will be using their own files here. */ 
 		 
-		for (int i = 1; i <= 1; i++) { 
+		for (int i = 1; i <= 20; i++) { 
 			String file = "tests"+System.getProperty("file.separator")+"Test"+i+".javax";
+			
+			BufferedReader br = null;
+			
+			try {
+				br = new BufferedReader(new FileReader(file));
+			} catch (FileNotFoundException e2) {
+			}
+			
+			String flag = null;
+			
+			try {
+				flag = br.readLine();
+			} catch (IOException e1) {
+			}
+			
 			try {
 				A2Compiler.compile(new File(file));
 				System.out.println(file+" ... OK");
@@ -21,8 +39,12 @@ public class A2MainRunner {
 				System.err.println(file+" Parser exception... "+e.getMessage());
 				e.printStackTrace();
 			} catch (A2SemanticsException e) {
-				System.err.println(file+" Semantics exception... "+e.getMessage());
-				e.printStackTrace();
+				if (flag.equals("//FAIL")) {
+					System.out.println(file+" ... OK");
+				}else{
+					System.err.println(file+" Semantics exception... "+e.getMessage());
+					e.printStackTrace();
+				}
 			}  catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}

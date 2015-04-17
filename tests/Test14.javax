@@ -1,6 +1,14 @@
-public class Test14 {
-	public dog bar() {
-		int b = 456;
-		return b; //testing incompatible return types
+//PASS
+public class StudentSample {
+	
+	public void JayZ() {
+		Yeezus kanye = new Yeezus(); // should work
+		double b = 2.0;
 	}
+	
+	public class Yeezus {
+		int age = 2;
+	}
+	
 }
+

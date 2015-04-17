@@ -1,3 +1,4 @@
+//FAIL
 public class Test7 {
 	public void foo(boolean x) {
 		b = 123;    // ERROR: out of scope

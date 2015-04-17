@@ -1,5 +1,13 @@
-public class Test15 {
-	public void bar() {
-		int b = 456; //should work, testing void method return
+//FAIL
+public class StudentSample {
+	
+	public void JayZ() {
+		int a = Yeezus(); // should fail, yeezus returns string
 	}
+	
+	public String Yeezus() {
+		return "beats";
+	}
+	
 }
+

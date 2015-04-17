@@ -1,0 +1,14 @@
+//FAIL
+public class Test {
+	public int a;
+	class Point {
+		int x, y;
+		void reset() {
+			a = 45; // OK
+			x = 0; y = 0;
+		}
+	}
+	Point p = Point();
+	p.x = 2; // should be ok
+	p.a = 2; // should be fail
+}

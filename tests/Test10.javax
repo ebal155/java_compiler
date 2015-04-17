@@ -1,3 +1,4 @@
+//PASS
 public class Test10 {
 	double a;
 	public void foo(boolean x) {

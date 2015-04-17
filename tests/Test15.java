@@ -1,6 +1,10 @@
-public class Test15 {
+public class StudentSample {
 
-    public void bar() {
-        int b = 456;
+    public void JayZ() {
+        int a = Yeezus();
+    }
+
+    public String Yeezus() {
+        return "beats";
     }
 }
