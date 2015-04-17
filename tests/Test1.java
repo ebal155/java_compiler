@@ -1,11 +1,8 @@
 public class StudentSample {
 
-    {
-        int bar;
+    public void hue(int a, int b) {
+        dasd = a + 5;
     }
 
-    public void hue() {
-        bar = 10;
-        int dasd = 5;
-    }
+    int dasd;
 }

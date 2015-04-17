@@ -697,6 +697,25 @@ public class DefineSymbolsVisitor implements VoidVisitor<Object>{
         printAnnotations(n.getAnnotations(), arg);
         printModifiers(n.getModifiers());
 
+    	String stringType = n.getType().toString();
+    	GlobalScope globalScope = new GlobalScope();
+    	SymtabType type = null;
+    	
+    	if (globalScope.resolve(stringType) != null) {
+    		//If its a BuiltInJava type, define
+    		type = new BuiltInTypeSymbol(globalScope.resolve(stringType).getName());
+    	}else{
+    		//If its any other type, assume this type exists
+    		ClassType cType = new ClassType(stringType);
+    		type = new TypeSymbol(stringType,cType);
+    	}
+        
+        VariableSymbol symbol = new VariableSymbol(n.getId().toString(),type);
+        
+        Scope scope = n.getScope();
+        
+        scope.define(symbol);
+        
         n.getType().accept(this, arg);
         if (n.isVarArgs()) {
         }

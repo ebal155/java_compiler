@@ -1,16 +1,10 @@
 public class StudentSample {
-
-	{
-		y = 0;
-		{
-			int y;
-			int bar;
-		}
-	}
 	
-	public void hue() {
-		int dasd = 5;
+	public void hue(int a, int b) {
+		dasd = a + 5;
 		
 	}
+	
+	int dasd;
 
 }

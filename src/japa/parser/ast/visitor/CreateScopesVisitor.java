@@ -733,6 +733,9 @@ public final class CreateScopesVisitor implements VoidVisitor<Object> {
         printAnnotations(n.getAnnotations(), arg);
         printModifiers(n.getModifiers());
 
+        n.setScope(currentScope);
+        
+        
         n.getType().accept(this, arg);
         if (n.isVarArgs()) {
         }
