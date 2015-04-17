@@ -1,0 +1,6 @@
+public class Test16 {
+	public dog bar() {
+		dog b = new dog(); //should work, testing compatible method return types
+		return b;
+	}
+}

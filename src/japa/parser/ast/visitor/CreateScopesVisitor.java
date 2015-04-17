@@ -341,6 +341,7 @@ public final class CreateScopesVisitor implements VoidVisitor<Object> {
     }
 
     public void visit(ReferenceType n, Object arg) {
+    	
         n.getType().accept(this, arg);
         for (int i = 0; i < n.getArrayCount(); i++) {
         }
@@ -853,6 +854,9 @@ public final class CreateScopesVisitor implements VoidVisitor<Object> {
     }
 
     public void visit(ReturnStmt n, Object arg) {
+    	
+    	n.setScope(currentScope);
+    	
         if (n.getExpr() != null) {
             n.getExpr().accept(this, arg);
         }

@@ -8,7 +8,10 @@ public class StudentSample {
 
     class Dog {
 
-        int lel;
+        int lel = 20;
+    }
+
+    class Meg {
     }
 
     Dog dog;

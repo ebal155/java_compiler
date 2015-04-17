@@ -21,6 +21,7 @@
  */
 package japa.parser.ast.type;
 
+import japa.parser.ast.symtab.Scope;
 import japa.parser.ast.visitor.GenericVisitor;
 import japa.parser.ast.visitor.VoidVisitor;
 
@@ -55,6 +56,10 @@ public final class ReferenceType extends Type {
     @Override
     public <R, A> R accept(GenericVisitor<R, A> v, A arg) {
         return v.visit(this, arg);
+    }
+    
+    public Scope getScope() {
+    	return this.scope;
     }
 
 }

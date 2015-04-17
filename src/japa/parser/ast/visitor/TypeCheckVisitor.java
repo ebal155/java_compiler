@@ -83,8 +83,11 @@ import japa.parser.ast.stmt.ThrowStmt;
 import japa.parser.ast.stmt.TryStmt;
 import japa.parser.ast.stmt.TypeDeclarationStmt;
 import japa.parser.ast.stmt.WhileStmt;
+import japa.parser.ast.symtab.BuiltInTypeSymbol;
 import japa.parser.ast.symtab.Scope;
 import japa.parser.ast.symtab.Symbol;
+import japa.parser.ast.symtab.SymtabType;
+import japa.parser.ast.symtab.TypeSymbol;
 import japa.parser.ast.type.ClassOrInterfaceType;
 import japa.parser.ast.type.PrimitiveType;
 import japa.parser.ast.type.ReferenceType;
@@ -830,9 +833,27 @@ public class TypeCheckVisitor implements VoidVisitor<Object>{
 
     public void visit(ReturnStmt n, Object arg) {
     	
+    	Scope scope = n.getScope();
+    	
+    	String expectedReturnTypeString = arg.toString();
+    	SymtabType actualReturnType = scope.resolve(n.getExpr().toString()).getType();
+    	String actualReturnTypeString = null;
+    	
+    	if (actualReturnType instanceof TypeSymbol) {
+    		TypeSymbol temp = (TypeSymbol) actualReturnType;
+    		actualReturnTypeString = actualReturnType.getName();
+    	}else if (actualReturnType instanceof BuiltInTypeSymbol) {
+    		BuiltInTypeSymbol temp = (BuiltInTypeSymbol) actualReturnType;
+    		actualReturnTypeString = actualReturnType.getName();    		
+    	}
+    	
+    	if (!(actualReturnTypeString.equals(expectedReturnTypeString))) {
+    		throw new A2SemanticsException("invalid return type: " + actualReturnTypeString  + ", need " + expectedReturnTypeString);
+    	}
+    	
         if (n.getExpr() != null) {
         	if (arg instanceof VoidType) {
-        		throw new A2SemanticsException("invalid return type");
+        		throw new A2SemanticsException("invalid return type " + actualReturnTypeString + ", need " + expectedReturnTypeString);
         	}
         	
             n.getExpr().accept(this, arg);

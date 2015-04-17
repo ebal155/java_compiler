@@ -1,6 +1,6 @@
 public class Test4 {
 
-    public dog bar() {
+    public int bar() {
         int b = 456;
         return b;
     }

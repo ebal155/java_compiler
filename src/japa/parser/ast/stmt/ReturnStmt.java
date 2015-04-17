@@ -22,6 +22,7 @@
 package japa.parser.ast.stmt;
 
 import japa.parser.ast.expr.Expression;
+import japa.parser.ast.symtab.Scope;
 import japa.parser.ast.visitor.GenericVisitor;
 import japa.parser.ast.visitor.VoidVisitor;
 
@@ -49,5 +50,9 @@ public final class ReturnStmt extends Statement {
     @Override
     public <R, A> R accept(GenericVisitor<R, A> v, A arg) {
         return v.visit(this, arg);
+    }
+    
+    public Scope getScope() {
+    	return this.scope;
     }
 }

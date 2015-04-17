@@ -1,0 +1,6 @@
+public class Test14 {
+	public dog bar() {
+		int b = 456;
+		return b; //testing incompatible return types
+	}
+}
