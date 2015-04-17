@@ -790,7 +790,6 @@ public final class CreateScopesVisitor implements VoidVisitor<Object> {
     	Scope blockSymbol = null;
     	
         if (arg == null) {
-        	System.out.println("here");
         	
 	        //Create a Statement and set it as a current scope
 	        Scope enclosingScope = currentScope; //scope above

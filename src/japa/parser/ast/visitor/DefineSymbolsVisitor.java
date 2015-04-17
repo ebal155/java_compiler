@@ -344,8 +344,6 @@ public class DefineSymbolsVisitor implements VoidVisitor<Object>{
         		type = new TypeSymbol(stringType,cType);
         	}
         	
-        	scope.define((Symbol) type);
-        	
             VariableSymbol b = new VariableSymbol(v.getId().toString(), type);
             scope.define(b);
         }
@@ -745,8 +743,6 @@ public class DefineSymbolsVisitor implements VoidVisitor<Object>{
         		ClassType cType = new ClassType(stringType);
         		type = new TypeSymbol(stringType,cType);
         	}
-        	
-        	scope.define((Symbol) type);
         	
             VariableSymbol b = new VariableSymbol(v.getId().toString(), type);
             scope.define(b);
