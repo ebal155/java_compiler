@@ -691,7 +691,7 @@ public final class CreateScopesVisitor implements VoidVisitor<Object> {
         
         //Create a MethodSymbol and set it as a current scope
         String scopeName = n.getName(); //name of method
-        SymtabType type =  null; //return type
+        SymtabType type =  null; //return type, doesn't matter when creating scopes
         Scope enclosingScope = currentScope; //scope above
         
         MethodSymbol methodSymbol = new MethodSymbol(scopeName, type, enclosingScope);

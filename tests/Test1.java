@@ -1,8 +1,15 @@
+package se701;
+
 public class StudentSample {
 
-    public void hue(int a, int b) {
-        dasd = a + 5;
+    public void hue() {
+        int lel = 5;
     }
 
-    int dasd;
+    class Dog {
+
+        int lel;
+    }
+
+    Dog dog;
 }

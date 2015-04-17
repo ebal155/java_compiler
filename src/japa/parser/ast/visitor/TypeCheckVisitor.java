@@ -366,6 +366,7 @@ public class TypeCheckVisitor implements VoidVisitor<Object>{
     }
 
     public void visit(VoidType n, Object arg) {
+    	
     }
 
     public void visit(ArrayAccessExpr n, Object arg) {
@@ -684,7 +685,6 @@ public class TypeCheckVisitor implements VoidVisitor<Object>{
         
         n.getType().accept(this, arg);     
 
-        
         if (n.getParameters() != null) {
             for (Iterator<Parameter> i = n.getParameters().iterator(); i.hasNext();) {
                 Parameter p = i.next();
@@ -708,7 +708,8 @@ public class TypeCheckVisitor implements VoidVisitor<Object>{
         
         if (n.getBody() == null) {
         } else {
-            n.getBody().accept(this, arg);
+        	//Pass in return type to the block statement
+            n.getBody().accept(this, n.getType());
         }
         
 		
@@ -828,7 +829,12 @@ public class TypeCheckVisitor implements VoidVisitor<Object>{
     }
 
     public void visit(ReturnStmt n, Object arg) {
+    	
         if (n.getExpr() != null) {
+        	if (arg instanceof VoidType) {
+        		throw new A2SemanticsException("invalid return type");
+        	}
+        	
             n.getExpr().accept(this, arg);
         }
     }

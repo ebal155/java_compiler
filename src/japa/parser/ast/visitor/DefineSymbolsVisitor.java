@@ -690,7 +690,6 @@ public class DefineSymbolsVisitor implements VoidVisitor<Object>{
             n.getBody().accept(this, arg);
         }
         
-		
     }
 
     public void visit(Parameter n, Object arg) {
