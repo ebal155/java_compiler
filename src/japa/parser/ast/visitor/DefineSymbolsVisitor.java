@@ -344,14 +344,14 @@ public class DefineSymbolsVisitor implements VoidVisitor<Object>{
         		//Check if this type is defined as a class
         		if (scope.resolve(stringType) != null) {
         			ClassType cType = new ClassType(stringType);
-        			type = new TypeSymbol(stringType,cType);
+        			type = new TypeSymbol(stringType,cType, 0);
         		}else{
         		//type doesnt exist
         			throw new A2SemanticsException(stringType + " is not a defined type on line " + n.getBeginLine());
         		}
         	}
         	
-            VariableSymbol b = new VariableSymbol(v.getId().toString(), type);
+            VariableSymbol b = new VariableSymbol(v.getId().toString(), type, n.getBeginLine());
             scope.define(b);
         }
         
@@ -713,10 +713,10 @@ public class DefineSymbolsVisitor implements VoidVisitor<Object>{
     	}else{
     		//If its any other type, assume this type exists
     		ClassType cType = new ClassType(stringType);
-    		type = new TypeSymbol(stringType,cType);
+    		type = new TypeSymbol(stringType,cType, 0);
     	}
         
-        VariableSymbol symbol = new VariableSymbol(n.getId().toString(),type);
+        VariableSymbol symbol = new VariableSymbol(n.getId().toString(),type, n.getBeginLine());
         
         Scope scope = n.getScope();
         
@@ -767,14 +767,14 @@ public class DefineSymbolsVisitor implements VoidVisitor<Object>{
         		//Check if this type is defined as a class
         		if (scope.resolve(stringType) != null) {
         			ClassType cType = new ClassType(stringType);
-        			type = new TypeSymbol(stringType,cType);
+        			type = new TypeSymbol(stringType,cType, 0);
         		}else{
         		//Otherwise type doesnt exist
         			throw new A2SemanticsException(stringType + " is not a defined type on line " + n.getBeginLine());
         		}
         	}
         	
-            VariableSymbol b = new VariableSymbol(v.getId().toString(), type);
+            VariableSymbol b = new VariableSymbol(v.getId().toString(), type, n.getBeginLine());
             scope.define(b);
             
         }

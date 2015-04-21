@@ -9,8 +9,8 @@ public abstract class ScopedSymbol extends Symbol implements Scope {
 	private HashMap<String, Symbol> symbols = new HashMap<String, Symbol>();
 	protected Scope enclosingScope = null;
 
-	public ScopedSymbol(String name, SymtabType type, Scope enclosingScope) {
-		super(name,type);
+	public ScopedSymbol(String name, SymtabType type, Scope enclosingScope, int line) {
+		super(name,type, line);
 		this.enclosingScope = enclosingScope;
 	}
 	

@@ -260,7 +260,7 @@ public final class CreateScopesVisitor implements VoidVisitor<Object> {
         	
         } else {
         	
-    		scope = new ClassSymbol(n.getName(),currentScope);
+    		scope = new ClassSymbol(n.getName(),currentScope, n.getBeginLine());
 
         	currentScope = scope;
         	n.setScope(currentScope);
@@ -382,6 +382,7 @@ public final class CreateScopesVisitor implements VoidVisitor<Object> {
     }
 
     public void visit(VariableDeclarator n, Object arg) {
+    	n.setScope(currentScope);
         n.getId().accept(this, arg);
         if (n.getInit() != null) {
             n.getInit().accept(this, arg);
@@ -710,7 +711,7 @@ public final class CreateScopesVisitor implements VoidVisitor<Object> {
         	type = new ClassType(n.getType().toString());
         }
         
-        MethodSymbol methodSymbol = new MethodSymbol(scopeName, type, enclosingScope);
+        MethodSymbol methodSymbol = new MethodSymbol(scopeName, type, enclosingScope, n.getBeginLine());
         currentScope = methodSymbol;
         n.setScope(currentScope);
         
@@ -813,7 +814,7 @@ public final class CreateScopesVisitor implements VoidVisitor<Object> {
 	        //Create a Statement and set it as a current scope
 	        Scope enclosingScope = currentScope; //scope above
 	        
-	        blockSymbol = new BlockSymbol(enclosingScope);
+	        blockSymbol = new BlockSymbol(enclosingScope, n.getBeginLine());
 	        
 	        currentScope = blockSymbol;
 	        n.setScope(currentScope);

@@ -199,7 +199,7 @@ public class CheckExpressionScopeVisitor implements VoidVisitor<Object>{
 
     public void visit(NameExpr n, Object arg) {
     	Scope scope = n.getScope();
-    	    	
+    	    	    	
     	if (!(scope instanceof GlobalScope)) {
 	    	if (scope.resolve(n.getName()) == null) {
 				throw new A2SemanticsException(n.getName() + " at line " + n.getBeginLine() + ", column " + n.getBeginColumn() + " is not defined");
@@ -341,6 +341,30 @@ public class CheckExpressionScopeVisitor implements VoidVisitor<Object>{
     }
 
     public void visit(VariableDeclarator n, Object arg) {
+    	
+    	if (n.getInit() != null) {
+    		if (n.getInit() instanceof NameExpr) {
+	    		Scope scope = n.getScope();
+	    		Symbol symbol = scope.resolve(n.getInit().toString());
+	    		if (symbol != null) {
+	    			//Check if the symbol is in the current scope by checking if the symbol is inside the enclosing scope
+	    			//If the symbol resolves for the current scope but not the enclosing scope, this means it is defined in the
+	    			//current scope
+	    			Symbol newSymbol = scope.getEnclosingScope().resolve(n.getInit().toString());
+	    			//if newSymbol is null, this means it is defined in the current scope 
+	    			if (newSymbol == null) {
+	    				//if the variable's line number of the assignment is less than the line number of the declaration
+	    				//then the variable is out of scope and cannot be assigned
+		    			if (n.getInit().getBeginLine() < symbol.getBeginLine()) {
+		    				throw new A2SemanticsException("Variable " + n.getInit().toString() + " is not defined at line " + n.getBeginLine());
+		    			}
+
+	    			}
+	    		}
+	    		
+    		}
+    	}
+    	
         n.getId().accept(this, arg);
         if (n.getInit() != null) {
             n.getInit().accept(this, arg);
@@ -417,7 +441,7 @@ public class CheckExpressionScopeVisitor implements VoidVisitor<Object>{
             case rUnsignedShift:
                 break;
         }
-        
+                        
         n.getValue().accept(this, arg);
     }
 

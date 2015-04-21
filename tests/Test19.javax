@@ -3,7 +3,7 @@ public class Forward {
 	public void foo() {
 		int a = x; // OK
 		int b = y; // should be an error
-		int y = 123; // defined in same scope but after “b”
+		int y = 123; // defined in same scope but after
 	}
 	private int x;
 }

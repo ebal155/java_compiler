@@ -38,16 +38,22 @@ public class A2MainRunner {
 			
 			try {
 				A2Compiler.compile(new File(file));
-				System.out.println(file + "...OK");
+				if (flag.equals("//FAIL")) {
+					System.out.println(file + "...failure");
+				}else{
+					System.out.println(file + "...OK");
+				}
+				
+				
 			} catch (ParseException e) {
 				System.err.println(file+" Parser exception... "+e.getMessage());
 				e.printStackTrace();
 			} catch (A2SemanticsException e) {
 				if (flag.equals("//FAIL")) {
 					System.out.println(file + "...OK");
-				}else{
-					System.err.println(file+" Semantics exception... "+e.getMessage());
 					e.printStackTrace();
+				}else{
+					System.out.println(file + "...failure");
 				}
 			}  catch (FileNotFoundException e) {
 				e.printStackTrace();

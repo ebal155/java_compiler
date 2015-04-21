@@ -23,6 +23,7 @@ package japa.parser.ast.body;
 
 import japa.parser.ast.Node;
 import japa.parser.ast.expr.Expression;
+import japa.parser.ast.symtab.Scope;
 import japa.parser.ast.visitor.GenericVisitor;
 import japa.parser.ast.visitor.VoidVisitor;
 
@@ -57,6 +58,10 @@ public final class VariableDeclarator extends Node {
     @Override
     public <R, A> R accept(GenericVisitor<R, A> v, A arg) {
         return v.visit(this, arg);
+    }
+    
+    public Scope getScope() {
+    	return this.scope;
     }
 
 }

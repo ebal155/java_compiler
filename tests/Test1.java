@@ -1,11 +1,11 @@
-public class Test1 {
+package se701;
 
-    boolean b;
+public class StudentSample {
 
-    public void foo(boolean x) {
-        {
-            int c;
+    public void hue(int lel) {
+        lel = 5;
+        boolean sds = false;
+        if (sds < 5) {
         }
-        c = 5;
     }
 }

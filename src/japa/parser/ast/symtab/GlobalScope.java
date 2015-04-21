@@ -15,7 +15,7 @@ public class GlobalScope implements Scope {
 		define(new BuiltInTypeSymbol("short"));
 		define(new BuiltInTypeSymbol("char"));
 		
-		define(new ClassSymbol("String",null));
+		define(new ClassSymbol("String",null, 0));
 		
 	}
 	
