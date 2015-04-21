@@ -216,6 +216,7 @@ public final class CreateScopesVisitor implements VoidVisitor<Object> {
                 i.accept(this, arg);
             }
         }
+        
         if (n.getTypes() != null) {
             for (Iterator<TypeDeclaration> i = n.getTypes().iterator(); i.hasNext();) {
                 i.next().accept(this, arg);

@@ -336,10 +336,12 @@ public class TypeCheckVisitor implements VoidVisitor<Object>{
             Symbol symbol = scope.resolve(variableName);
             String type = null;
             
+            
             if (symbol.getType() != null){
             	type = symbol.getType().getName();
             }
             
+            //pass this type on to the respective expression
             var.accept(this, type);
             if (i.hasNext()) {
             }
@@ -442,6 +444,9 @@ public class TypeCheckVisitor implements VoidVisitor<Object>{
     }
 
     public void visit(BinaryExpr n, Object arg) {
+    	
+    	System.out.println(n.getLeft().getClass());
+    	System.out.println(n.getRight().getClass());
     	
         n.getLeft().accept(this, arg);
         switch (n.getOperator()) {
@@ -968,6 +973,7 @@ public class TypeCheckVisitor implements VoidVisitor<Object>{
 
     public void visit(IfStmt n, Object arg) {
         n.getCondition().accept(this, arg);
+        
         n.getThenStmt().accept(this, arg);
         if (n.getElseStmt() != null) {
             n.getElseStmt().accept(this, arg);

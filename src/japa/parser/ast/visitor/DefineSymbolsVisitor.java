@@ -344,6 +344,7 @@ public class DefineSymbolsVisitor implements VoidVisitor<Object>{
         		//Check if this type is defined as a class
         		if (scope.resolve(stringType) != null) {
         			ClassType cType = new ClassType(stringType);
+        			//type name, type and line number (0 for classes)
         			type = new TypeSymbol(stringType,cType, 0);
         		}else{
         		//type doesnt exist
@@ -713,6 +714,7 @@ public class DefineSymbolsVisitor implements VoidVisitor<Object>{
     	}else{
     		//If its any other type, assume this type exists
     		ClassType cType = new ClassType(stringType);
+			//type name, type and line number (0 for classes)
     		type = new TypeSymbol(stringType,cType, 0);
     	}
         
@@ -767,6 +769,7 @@ public class DefineSymbolsVisitor implements VoidVisitor<Object>{
         		//Check if this type is defined as a class
         		if (scope.resolve(stringType) != null) {
         			ClassType cType = new ClassType(stringType);
+        			//type name, type and line number (0 for classes)
         			type = new TypeSymbol(stringType,cType, 0);
         		}else{
         		//Otherwise type doesnt exist

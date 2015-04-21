@@ -200,7 +200,11 @@ public class CheckExpressionScopeVisitor implements VoidVisitor<Object>{
     public void visit(NameExpr n, Object arg) {
     	Scope scope = n.getScope();
     	    	    	
+    	//All variables will pass through a NameExpr node
+    	
+    	//Check first if the scope isn't the global scope, kind of hard-code to deal with package/imports
     	if (!(scope instanceof GlobalScope)) {
+    		//Check if the variable name resolves to a symbol, if it doesn't throw exception.
 	    	if (scope.resolve(n.getName()) == null) {
 				throw new A2SemanticsException(n.getName() + " at line " + n.getBeginLine() + ", column " + n.getBeginColumn() + " is not defined");
 			}else{
