@@ -25,6 +25,7 @@ import japa.parser.ast.TypeParameter;
 import japa.parser.ast.expr.AnnotationExpr;
 import japa.parser.ast.expr.NameExpr;
 import japa.parser.ast.stmt.BlockStmt;
+import japa.parser.ast.symtab.Scope;
 import japa.parser.ast.type.Type;
 import japa.parser.ast.visitor.GenericVisitor;
 import japa.parser.ast.visitor.VoidVisitor;
@@ -108,6 +109,10 @@ public final class DelegateDeclaration extends BodyDeclaration {
     @Override
     public <R, A> R accept(GenericVisitor<R, A> v, A arg) {
         return v.visit(this, arg);
+    }
+    
+    public Scope getScope() {
+    	return this.scope;
     }
 
 }

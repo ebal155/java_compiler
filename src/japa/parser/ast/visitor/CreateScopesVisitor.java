@@ -121,6 +121,7 @@ import japa.parser.ast.type.Type;
 import japa.parser.ast.type.VoidType;
 import japa.parser.ast.type.WildcardType;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -713,7 +714,14 @@ public final class CreateScopesVisitor implements VoidVisitor<Object> {
         	type = new ClassType(n.getType().toString());
         }
         
-        MethodSymbol methodSymbol = new MethodSymbol(scopeName, type, enclosingScope, n.getBeginLine());
+		ArrayList<String> paramList = new ArrayList<String>();
+		
+		for (int i = 0; i < n.getParameters().size(); i++) {
+			String[] temp = n.getParameters().get(i).toString().split(" ");
+			paramList.add(temp[0]);
+		}
+        
+        MethodSymbol methodSymbol = new MethodSymbol(scopeName, type, enclosingScope, n.getBeginLine(), paramList);
         currentScope = methodSymbol;
         n.setScope(currentScope);
         
@@ -1091,6 +1099,7 @@ public final class CreateScopesVisitor implements VoidVisitor<Object> {
 
 	@Override
 	public void visit(DelegateDeclaration n, Object arg) {
+		n.setScope(currentScope);
 	}
 
 }

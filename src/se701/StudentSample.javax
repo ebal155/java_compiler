@@ -1,17 +1,25 @@
-package se701;
+//FAIL
+public class Test {
 
-public class Animal {
-	int age;
-}
-
-public class Dog extends Animal {
-	int name;
+	public delegate void Del(String message, int a);
 	
-	public void test() {
-		age = 2;
+	
+	public static void DelegateMethod(String message, int b) {
+		
 	}
+	
+	public static void main(String args[]) {
+		Del handler = DelegateMethod;
+		//handler("Hello World");
+		Dog dog = new Dog();
+	}
+
+	public class Dog{
+	}
+
 }
 
-public class GermanShepherd extends Dog {
 
-}
+//Define delegateSymbol in the scope
+//resolve DelegateMethod
+//compre with delegatesymbol with methodsymbol

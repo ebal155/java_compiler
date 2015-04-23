@@ -1,14 +1,13 @@
 package japa.parser.ast.symtab;
 
-import java.awt.List;
 import java.util.ArrayList;
 
-public class MethodSymbol extends ScopedSymbol {
+public class DelegateSymbol extends Symbol{
 
 	ArrayList<String> paramList = new ArrayList<String>();
 	
-	public MethodSymbol(String name, SymtabType type, Scope enclosingScope,int line, ArrayList<String> paramList) {
-		super(name, type, enclosingScope, line);
+	public DelegateSymbol(String name, SymtabType type, int line, ArrayList<String> paramList) {
+		super(name, type, line);
 		this.paramList = paramList;
 	}
 	

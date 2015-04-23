@@ -84,7 +84,9 @@ import japa.parser.ast.stmt.TryStmt;
 import japa.parser.ast.stmt.TypeDeclarationStmt;
 import japa.parser.ast.stmt.WhileStmt;
 import japa.parser.ast.symtab.ClassSymbol;
+import japa.parser.ast.symtab.DelegateSymbol;
 import japa.parser.ast.symtab.GlobalScope;
+import japa.parser.ast.symtab.MethodSymbol;
 import japa.parser.ast.symtab.Scope;
 import japa.parser.ast.symtab.Symbol;
 import japa.parser.ast.type.ClassOrInterfaceType;
@@ -208,7 +210,6 @@ public class CheckExpressionScopeVisitor implements VoidVisitor<Object>{
     		//Check if the variable name resolves to a symbol, if it doesn't throw exception.
 	    	if (scope.resolve(n.getName()) == null) {
 				throw new A2SemanticsException(n.getName() + " at line " + n.getBeginLine() + ", column " + n.getBeginColumn() + " is not defined");
-			}else{
 			}
     	}
     }
@@ -250,7 +251,6 @@ public class CheckExpressionScopeVisitor implements VoidVisitor<Object>{
                 
                 //Class symbol to check if the class that is being extended is in scope
                 Symbol superClassSymbol = scope.resolve(c.toString());
-                
                 
                 if (!(superClassSymbol instanceof ClassSymbol) || 
                 		superClassSymbol == null) {
@@ -652,6 +652,7 @@ public class CheckExpressionScopeVisitor implements VoidVisitor<Object>{
     }
 
     public void visit(ConstructorDeclaration n, Object arg) {
+    	
         if (n.getJavaDoc() != null) {
             n.getJavaDoc().accept(this, arg);
         }
@@ -736,6 +737,7 @@ public class CheckExpressionScopeVisitor implements VoidVisitor<Object>{
     }
 
     public void visit(ExplicitConstructorInvocationStmt n, Object arg) {
+    	
         if (n.isThis()) {
             printTypeArgs(n.getTypeArgs(), arg);
         } else {
@@ -761,7 +763,36 @@ public class CheckExpressionScopeVisitor implements VoidVisitor<Object>{
         n.getType().accept(this, arg);    
         
         for (Iterator<VariableDeclarator> i = n.getVars().iterator(); i.hasNext();) {
+        	
+        	Scope scope = n.getScope();
+        	
             VariableDeclarator v = i.next();
+            
+            
+            String variableType = n.getType().toString();
+            
+            //Logic for declaring delegates
+            //Check if the right side exists (it is being assigned on declaration) 
+            if (v.getInit() != null && (scope.resolve(variableType) instanceof DelegateSymbol)) {
+            	String variableAssignmentName = v.getInit().toString();
+	            if (scope.resolve(variableAssignmentName) instanceof MethodSymbol) {
+	            	MethodSymbol methodSymbol= (MethodSymbol) scope.resolve(v.getInit().toString());
+	                DelegateSymbol delegateSymbol = (DelegateSymbol) scope.resolve(n.getType().toString());
+	                
+	                if (!methodSymbol.getParams().equals(delegateSymbol.getParams())) {
+	                	throw new A2SemanticsException("The parameters of the delegate " + delegateSymbol.getName() +
+	                			" and " + methodSymbol.getName() + " do not match on line "
+	                			+ n.getBeginLine());
+	                }
+	                
+	            }else {
+	            	throw new A2SemanticsException("The assignment on the delegate " + v.getId() + " has to be a name of a method " + 
+	            			"on line " + n.getBeginLine());
+	            }
+            }else{
+            	//Do the logic for types that ARENT delegates!
+            }
+            
             v.accept(this, arg);
             if (i.hasNext()) {
             }

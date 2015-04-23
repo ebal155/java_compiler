@@ -1,18 +1,15 @@
-package se701;
+public class Test {
 
-public class Animal {
 
-    int age;
-}
 
-public class Dog extends Animal {
-
-    int name;
-
-    public void test() {
-        age = 2;
+    public static void DelegateMethod(String message, int b) {
     }
-}
 
-public class GermanShepherd extends Dog {
+    public static void main(String args[]) {
+        Del handler = DelegateMethod;
+        Dog dog = new Dog();
+    }
+
+    public class Dog {
+    }
 }

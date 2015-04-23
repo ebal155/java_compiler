@@ -434,7 +434,7 @@ public class TypeCheckVisitor implements VoidVisitor<Object>{
         //Get the corresponding symbol of the variable with this name
         Symbol symbol = scope.resolve(variableName);
         String type = null;
-        
+
         if (symbol.getType() != null){
         	type = symbol.getType().getName();
         }

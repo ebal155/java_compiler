@@ -13,5 +13,7 @@ public class Test {
         }
     }
 
-    Point p = Point();
+    public void test() {
+        Point p = new Point();
+    }
 }

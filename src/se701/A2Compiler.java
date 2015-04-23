@@ -11,6 +11,7 @@ import japa.parser.ast.CompilationUnit;
 import japa.parser.ast.visitor.CheckExpressionScopeVisitor;
 import japa.parser.ast.visitor.CreateScopesVisitor;
 import japa.parser.ast.visitor.DefineSymbolsVisitor;
+import japa.parser.ast.visitor.DelegateVisitor;
 import japa.parser.ast.visitor.SourceToSourceVisitor;
 import japa.parser.ast.visitor.TypeCheckVisitor;
 
@@ -40,6 +41,8 @@ public class A2Compiler {
 		
 		TypeCheckVisitor typeCheckVisitor = new TypeCheckVisitor();
 		ast.accept(typeCheckVisitor, null);
+		
+
 		
 		String result = printVisitor.getSource();
 		

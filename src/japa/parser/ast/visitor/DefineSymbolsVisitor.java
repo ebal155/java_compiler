@@ -86,6 +86,8 @@ import japa.parser.ast.stmt.WhileStmt;
 import japa.parser.ast.symtab.BuiltInTypeSymbol;
 import japa.parser.ast.symtab.ClassSymbol;
 import japa.parser.ast.symtab.ClassType;
+import japa.parser.ast.symtab.DelegateReturnType;
+import japa.parser.ast.symtab.DelegateSymbol;
 import japa.parser.ast.symtab.GlobalScope;
 import japa.parser.ast.symtab.MethodSymbol;
 import japa.parser.ast.symtab.Scope;
@@ -100,6 +102,7 @@ import japa.parser.ast.type.Type;
 import japa.parser.ast.type.VoidType;
 import japa.parser.ast.type.WildcardType;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -339,7 +342,6 @@ public class DefineSymbolsVisitor implements VoidVisitor<Object>{
         	GlobalScope globalScope = new GlobalScope();
         	SymtabType type = null;
         	
-        	
         	if (globalScope.resolve(stringType) != null) {
         		//If its a BuiltInJava type, define
         		type = new BuiltInTypeSymbol(globalScope.resolve(stringType).getName());
@@ -422,6 +424,7 @@ public class DefineSymbolsVisitor implements VoidVisitor<Object>{
 
     public void visit(AssignExpr n, Object arg) {
         n.getTarget().accept(this, arg);
+        
         switch (n.getOperator()) {
             case assign:
                 break;
@@ -631,6 +634,9 @@ public class DefineSymbolsVisitor implements VoidVisitor<Object>{
     }
 
     public void visit(ConstructorDeclaration n, Object arg) {
+    	
+    	
+    	
         if (n.getJavaDoc() != null) {
             n.getJavaDoc().accept(this, arg);
         }
@@ -764,7 +770,7 @@ public class DefineSymbolsVisitor implements VoidVisitor<Object>{
         	String stringType = n.getType().toString();
         	GlobalScope globalScope = new GlobalScope();
         	SymtabType type = null;
-        	
+
         	if (globalScope.resolve(stringType) != null) {
         		//If its a BuiltInJava type, define
         		type = new BuiltInTypeSymbol(globalScope.resolve(stringType).getName());
@@ -1063,6 +1069,21 @@ public class DefineSymbolsVisitor implements VoidVisitor<Object>{
 
 	@Override
 	public void visit(DelegateDeclaration n, Object arg) {
+		String name = n.getName();
+		ArrayList<String> paramList = new ArrayList<String>();
+		
+		for (int i = 0; i < n.getParameters().size(); i++) {
+			String[] temp = n.getParameters().get(i).toString().split(" ");
+			paramList.add(temp[0]);
+		}
+		
+		DelegateReturnType type = new DelegateReturnType(n.getType().toString());
+		
+		DelegateSymbol del = new DelegateSymbol(name,type,n.getBeginLine(), paramList);
+		
+		Scope scope = n.getScope();
+		
+		scope.define(del);
 	}
 
 }
