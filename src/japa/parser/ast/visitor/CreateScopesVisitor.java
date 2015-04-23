@@ -129,10 +129,11 @@ import java.util.List;
  */
 
 public final class CreateScopesVisitor implements VoidVisitor<Object> {
-
+	
 	Scope currentScope = new GlobalScope();
 
     private void printModifiers(int modifiers) {
+    	
         if (ModifierSet.isPrivate(modifiers)) {
         }
         if (ModifierSet.isProtected(modifiers)) {

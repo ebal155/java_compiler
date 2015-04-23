@@ -1,20 +1,17 @@
 package se701;
 
-public class StudentSample {
-	
-	int a;
-	
-	public  delegate void hello(int a, int b);
-	
-	public  void main(String[] args) {
-		a = 2 + 3;
-	}
-	
-	public void add(int a, int b) {
-		
-	}
-
-	
+public class Animal {
+	int age;
 }
 
-class Meg {}
+public class Dog extends Animal {
+	int name;
+	
+	public void test() {
+		age = 2;
+	}
+}
+
+public class GermanShepherd extends Dog {
+
+}

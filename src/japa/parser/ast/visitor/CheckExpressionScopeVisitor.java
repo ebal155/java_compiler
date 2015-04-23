@@ -83,6 +83,7 @@ import japa.parser.ast.stmt.ThrowStmt;
 import japa.parser.ast.stmt.TryStmt;
 import japa.parser.ast.stmt.TypeDeclarationStmt;
 import japa.parser.ast.stmt.WhileStmt;
+import japa.parser.ast.symtab.ClassSymbol;
 import japa.parser.ast.symtab.GlobalScope;
 import japa.parser.ast.symtab.Scope;
 import japa.parser.ast.symtab.Symbol;
@@ -242,6 +243,25 @@ public class CheckExpressionScopeVisitor implements VoidVisitor<Object>{
         if (n.getExtends() != null) {
             for (Iterator<ClassOrInterfaceType> i = n.getExtends().iterator(); i.hasNext();) {
                 ClassOrInterfaceType c = i.next();
+                
+                //Currently in n's scope, need to check the enclosing scope because
+                //the class that n is extending will never be inside n's scope
+                Scope scope = n.getScope().getEnclosingScope();
+                
+                //Class symbol to check if the class that is being extended is in scope
+                Symbol superClassSymbol = scope.resolve(c.toString());
+                
+                
+                if (!(superClassSymbol instanceof ClassSymbol) || 
+                		superClassSymbol == null) {
+                	throw new A2SemanticsException("The class " + c + " is not defined on line " + c.getBeginLine());
+                }
+                
+                Symbol subClassSymbol = scope.resolve(n.getName());
+                
+                //Set the parent of the new class to the class its extending
+                ((ClassSymbol) subClassSymbol).setParent((ClassSymbol) superClassSymbol);
+                
                 c.accept(this, arg);
                 if (i.hasNext()) {
                 }
@@ -260,6 +280,8 @@ public class CheckExpressionScopeVisitor implements VoidVisitor<Object>{
         if (n.getMembers() != null) {
             printMembers(n.getMembers(), arg);
         }
+        
+        
 		
     }
 
@@ -347,6 +369,7 @@ public class CheckExpressionScopeVisitor implements VoidVisitor<Object>{
     public void visit(VariableDeclarator n, Object arg) {
     	
     	if (n.getInit() != null) {
+    		//Check if it is a variable assignment and not a literal (e.g 123 or "hello")
     		if (n.getInit() instanceof NameExpr) {
 	    		Scope scope = n.getScope();
 	    		Symbol symbol = scope.resolve(n.getInit().toString());

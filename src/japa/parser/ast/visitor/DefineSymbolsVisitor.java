@@ -237,6 +237,7 @@ public class DefineSymbolsVisitor implements VoidVisitor<Object>{
         if (n.getExtends() != null) {
             for (Iterator<ClassOrInterfaceType> i = n.getExtends().iterator(); i.hasNext();) {
                 ClassOrInterfaceType c = i.next();
+
                 c.accept(this, arg);
                 if (i.hasNext()) {
                 }
@@ -271,6 +272,8 @@ public class DefineSymbolsVisitor implements VoidVisitor<Object>{
         if (n.getScope() != null) {
             n.getScope().accept(this, arg);
         }
+        
+        
         printTypeArgs(n.getTypeArgs(), arg);
     }
 
