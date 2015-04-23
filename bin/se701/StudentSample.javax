@@ -4,12 +4,18 @@ public class Test {
 	public delegate void Del(String message, int a);
 	
 	
-	public static void DelegateMethod(String message, int b) {
+	public static Dog DelegateMethod(String message, int b) {
 		
+	}
+	
+	public void lala(String m, int a) {
+	
 	}
 	
 	public static void main(String args[]) {
 		Del handler = DelegateMethod;
+		Del handler2 = lala;
+		
 		handler("Hello World", 5);
 	}
 

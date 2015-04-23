@@ -86,7 +86,6 @@ import japa.parser.ast.stmt.WhileStmt;
 import japa.parser.ast.symtab.BuiltInTypeSymbol;
 import japa.parser.ast.symtab.ClassSymbol;
 import japa.parser.ast.symtab.ClassType;
-import japa.parser.ast.symtab.DelegateReturnType;
 import japa.parser.ast.symtab.DelegateSymbol;
 import japa.parser.ast.symtab.GlobalScope;
 import japa.parser.ast.symtab.MethodSymbol;
@@ -1068,6 +1067,8 @@ public class DefineSymbolsVisitor implements VoidVisitor<Object>{
 
 	@Override
 	public void visit(DelegateDeclaration n, Object arg) {
+		
+		Scope scope = n.getScope();
 		String name = n.getName();
 		ArrayList<String> paramList = new ArrayList<String>();
 		
@@ -1076,13 +1077,35 @@ public class DefineSymbolsVisitor implements VoidVisitor<Object>{
 			paramList.add(temp[0]);
 		}
 		
-		DelegateReturnType type = new DelegateReturnType(n.getType().toString());
+		GlobalScope globalscope = new GlobalScope();
+		
+		SymtabType type = null;
+		
+        if (globalscope.resolve(n.getType().toString()) != null) {
+        	type = new BuiltInTypeSymbol(n.getType().toString());
+        }else{
+        	type = new ClassType(n.getType().toString());
+        }
+        
+        Symbol returnTypeSymbol = scope.resolve(n.getType().toString());
+        //Check if the return type is a valid type
+        if (returnTypeSymbol != null) {
+    		//return type is in the symbol table but is not a type
+        	if (!(returnTypeSymbol instanceof SymtabType)) {
+        		throw new A2SemanticsException("The return type " + returnTypeSymbol.getName() + " is not defined " + 
+        					" on line" + n.getBeginLine());
+        	}
+        }else{
+        	//return type is not in the symbol table
+    		throw new A2SemanticsException("The return type " + n.getType().toString() + " is not defined " + 
+					" on line " + n.getBeginLine());
+        }
 		
 		DelegateSymbol del = new DelegateSymbol(name,type,n.getBeginLine(), paramList);
 		
-		Scope scope = n.getScope();
-		
 		scope.define(del);
+		
+
 	}
 
 }

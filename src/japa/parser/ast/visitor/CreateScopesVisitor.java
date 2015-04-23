@@ -114,6 +114,7 @@ import japa.parser.ast.symtab.Scope;
 import japa.parser.ast.symtab.BlockSymbol;
 import japa.parser.ast.symtab.Symbol;
 import japa.parser.ast.symtab.SymtabType;
+import japa.parser.ast.symtab.TypeSymbol;
 import japa.parser.ast.type.ClassOrInterfaceType;
 import japa.parser.ast.type.PrimitiveType;
 import japa.parser.ast.type.ReferenceType;
@@ -703,12 +704,10 @@ public final class CreateScopesVisitor implements VoidVisitor<Object> {
         n.getType().accept(this, arg);     
         
         GlobalScope globalscope = new GlobalScope();
-        
 
-        
         //Create a MethodSymbol and set it as a current scope
         String scopeName = n.getName(); //name of method
-        SymtabType type =  null; //return type
+        SymtabType type = null; //return type
         Scope enclosingScope = currentScope; //scope above
                 
         if (globalscope.resolve(n.getType().toString()) != null) {

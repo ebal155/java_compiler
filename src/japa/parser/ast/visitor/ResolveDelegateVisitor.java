@@ -104,7 +104,6 @@ import japa.parser.ast.stmt.ThrowStmt;
 import japa.parser.ast.stmt.TryStmt;
 import japa.parser.ast.stmt.TypeDeclarationStmt;
 import japa.parser.ast.stmt.WhileStmt;
-import japa.parser.ast.symtab.DelegateReturnType;
 import japa.parser.ast.symtab.DelegateSymbol;
 import japa.parser.ast.symtab.MethodSymbol;
 import japa.parser.ast.symtab.Scope;
@@ -742,7 +741,18 @@ public final class ResolveDelegateVisitor implements VoidVisitor<Object> {
 	                //Check if the params of the delegate and the method matches
 	                if (!methodSymbol.getParams().equals(delegateSymbol.getParams())) {
 	                	throw new A2SemanticsException("The parameters of the delegate " + delegateSymbol.getName() +
+	                			"(" + "" + ")" +
 	                			" and " + methodSymbol.getName() + " do not match on line "
+	                			+ n.getBeginLine());
+	                }
+	                
+	                //Check if the return type of the delegate and the method matches
+	                if (!(methodSymbol.getType().getName().equals(delegateSymbol.getType().getName()))) {
+	                	throw new A2SemanticsException("The return type of the delegate " + delegateSymbol.getName() 
+	                			+ "(" + delegateSymbol.getType().getName() + ")" 
+	                			+ " and " + methodSymbol.getName() 
+	                			+ "(" + methodSymbol.getType().getName()  + ")" 
+	                			+ " do not match on line " +
 	                			+ n.getBeginLine());
 	                }
 	                

@@ -10,8 +10,7 @@ public class ClassType implements SymtabType{
 	
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
+		return name;
 	}
 
 }

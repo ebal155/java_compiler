@@ -740,6 +740,21 @@ public class TypeCheckVisitor implements VoidVisitor<Object>{
         if (n.getTypeParameters() != null) {
         }
         
+        Scope scope = n.getScope();
+        Symbol returnTypeSymbol = scope.resolve(n.getType().toString());
+        //Check if the return type is a valid type
+        if (returnTypeSymbol != null) {
+        	if (!(returnTypeSymbol instanceof SymtabType)) {
+        		//return type is in the symbol table but is not a type
+        		throw new A2SemanticsException("The return type " + returnTypeSymbol.getName() + " is not defined " + 
+        					" on line" + n.getBeginLine());
+        	}
+        }else{
+        	//return type is not in the symbol table
+    		throw new A2SemanticsException("The return type " + n.getType().toString() + " is not defined " + 
+					" on line " + n.getBeginLine());
+        }
+        
         n.getType().accept(this, arg);     
 
         if (n.getParameters() != null) {
@@ -835,6 +850,7 @@ public class TypeCheckVisitor implements VoidVisitor<Object>{
             	if (type != returnType) {
             		throw new A2SemanticsException("Cannot assign " + returnType + " to a " + type + " at line " + n.getBeginLine());
             	}
+            	
             }
             
             v.accept(this, type);
