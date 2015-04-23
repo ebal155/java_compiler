@@ -2,7 +2,7 @@ package japa.parser.ast.symtab;
 
 import java.util.ArrayList;
 
-public class DelegateSymbol extends Symbol{
+public class DelegateSymbol extends Symbol implements SymtabType{
 
 	ArrayList<String> paramList = new ArrayList<String>();
 	

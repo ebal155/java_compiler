@@ -7,7 +7,7 @@ public class Test {
 
     public static void main(String args[]) {
         Del handler = DelegateMethod;
-        Dog dog = new Dog();
+        handler("Hello World", 5);
     }
 
     public class Dog {

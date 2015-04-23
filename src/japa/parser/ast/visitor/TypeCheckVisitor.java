@@ -84,6 +84,8 @@ import japa.parser.ast.stmt.TryStmt;
 import japa.parser.ast.stmt.TypeDeclarationStmt;
 import japa.parser.ast.stmt.WhileStmt;
 import japa.parser.ast.symtab.BuiltInTypeSymbol;
+import japa.parser.ast.symtab.DelegateSymbol;
+import japa.parser.ast.symtab.MethodSymbol;
 import japa.parser.ast.symtab.Scope;
 import japa.parser.ast.symtab.Symbol;
 import japa.parser.ast.symtab.SymtabType;
@@ -95,6 +97,7 @@ import japa.parser.ast.type.Type;
 import japa.parser.ast.type.VoidType;
 import japa.parser.ast.type.WildcardType;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -445,9 +448,6 @@ public class TypeCheckVisitor implements VoidVisitor<Object>{
 
     public void visit(BinaryExpr n, Object arg) {
     	
-    	System.out.println(n.getLeft().getClass());
-    	System.out.println(n.getRight().getClass());
-    	
         n.getLeft().accept(this, arg);
         switch (n.getOperator()) {
             case or:
@@ -526,7 +526,7 @@ public class TypeCheckVisitor implements VoidVisitor<Object>{
   		if (!((arg instanceof ReferenceType) || (arg instanceof VoidType))) {
     	type = (String) arg;
 
-	    	if (type != "String" && type != "char") {
+	    	if (!type.equals("String") && !type.equals("char")) {
 	    		throw new A2SemanticsException("Cannot assign char on line " + n.getBeginLine() + ", must assign a " + type);
 	    	}
 	  	}
@@ -539,7 +539,7 @@ public class TypeCheckVisitor implements VoidVisitor<Object>{
     		
         	type = (String) arg;
     		
-	    	if (type != "double") {
+	    	if (!type.equals("double")) {
 	    		throw new A2SemanticsException("Cannot assign double on line " + n.getBeginLine() + ", must assign a " + type);
 	    	}
     	}
@@ -551,7 +551,7 @@ public class TypeCheckVisitor implements VoidVisitor<Object>{
     	if (!((arg instanceof ReferenceType) || (arg instanceof VoidType))) {
         	type = (String) arg;
 
-	    	if (type != "int" && type != "double") {
+	    	if (!type.equals("int") && !type.equals("double")) {
 	    		throw new A2SemanticsException("Cannot assign int on line " + n.getBeginLine() + ", must assign a " + type);
 	    	}
     	}
@@ -571,8 +571,7 @@ public class TypeCheckVisitor implements VoidVisitor<Object>{
     	
     	if (!((arg instanceof ReferenceType) || (arg instanceof VoidType))) {
 	    	type = (String) arg;
-	    	
-	    	if (type != "String") {
+	    	if (!type.equals("String")) {
 	    		throw new A2SemanticsException("Cannot assign \"" + n.getValue() + "\" on line " + n.getBeginLine() + ", must assign a " + type);
 	    	}
     	}
@@ -585,7 +584,7 @@ public class TypeCheckVisitor implements VoidVisitor<Object>{
     		
         	type = (String) arg;
     		
-	    	if (type != "boolean") {
+	    	if (!type.equals("boolean")) {
 	    		throw new A2SemanticsException("Cannot assign \"" + n.getValue() + "\" on line " + n.getBeginLine() + ", must assign a " + type);
 	    	}
     	}
@@ -607,17 +606,42 @@ public class TypeCheckVisitor implements VoidVisitor<Object>{
     }
 
     public void visit(MethodCallExpr n, Object arg) {
+
+    	String methodName = n.getName();
+    	Scope scope = n.getRealScope();
+    	//Get the type of the method name
+    	String type = scope.resolve(methodName).getType().getName();
+    	ArrayList<String> params = null;
+    	
+    	//Resolve the type and check if it exists, and if it is delegate or a method
+    	if (scope.resolve(type) != null) {
+	    	if (scope.resolve(type) instanceof DelegateSymbol) {
+	    		params = ((DelegateSymbol) scope.resolve(type)).getParams();
+	    	}else if (scope.resolve(type) instanceof MethodSymbol) {
+	    		params = ((MethodSymbol) scope.resolve(type)).getParams();
+	    	}
+    	}
+    	
         if (n.getScope() != null) {
             n.getScope().accept(this, arg);
         }
+        
         printTypeArgs(n.getTypeArgs(), arg);
-        if (n.getArgs() != null) {
-            for (Iterator<Expression> i = n.getArgs().iterator(); i.hasNext();) {
-                Expression e = i.next();
-                e.accept(this, arg);
-                if (i.hasNext()) {
-                }
-            }
+        if (n.getArgs().size() == params.size()) {
+        	//Count to keep track of aramlist
+        	int count = 0;
+	        if (n.getArgs() != null) {
+	            for (Iterator<Expression> i = n.getArgs().iterator(); i.hasNext();) {
+	                Expression e = i.next();
+	                //Send the expected type of the parameter to the expression statement
+	                e.accept(this, params.get(count));
+	                count++;
+	                if (i.hasNext()) {
+	                }
+	            }
+	        }
+        }else{
+        	throw new A2SemanticsException("The parameters do not much for the " + n.getName() + " method/delegate on line " + n.getBeginLine());
         }
     }
 
@@ -790,6 +814,7 @@ public class TypeCheckVisitor implements VoidVisitor<Object>{
             String variableName = v.getId().toString();
             
             //Get the corresponding symbol of the variable with this name
+            
             Symbol symbol = scope.resolve(variableName);
             String type = null;
             
@@ -797,10 +822,13 @@ public class TypeCheckVisitor implements VoidVisitor<Object>{
             	type = symbol.getType().getName();
             }
                     
+            //NEED TO FIX
             if (v.getInit() instanceof MethodCallExpr) {
             	
+            	//Take out the brackets out of the method call
             	String methodName = v.getInit().toString().replace("()","");
             	
+            	//Resovle if the method exists
             	Symbol methodSymbol = scope.getEnclosingScope().resolve(methodName);
             	String returnType = methodSymbol.getType().getName();
             	
@@ -878,7 +906,10 @@ public class TypeCheckVisitor implements VoidVisitor<Object>{
     	
     	String expectedReturnTypeString = arg.toString();
     	String actualReturnTypeString = null;
+    	
+    	//Check if returning a variable
     	if (n.getExpr() instanceof NameExpr) {
+    		//Resolve the variable's name in the current scope and get the type of the symbol returned
 	    	SymtabType actualReturnType = scope.resolve(n.getExpr().toString()).getType();
 	    	
 	    	if (actualReturnType instanceof TypeSymbol) {
@@ -892,6 +923,8 @@ public class TypeCheckVisitor implements VoidVisitor<Object>{
 	    	if (!(actualReturnTypeString.equals(expectedReturnTypeString))) {
 	    		throw new A2SemanticsException("invalid return type: " + actualReturnTypeString  + ", need " + expectedReturnTypeString);
 	    	}
+    	}else{
+    		actualReturnTypeString = n.getExpr().toString();
     	}
     	
         if (n.getExpr() != null) {

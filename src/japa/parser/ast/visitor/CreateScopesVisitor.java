@@ -589,6 +589,9 @@ public final class CreateScopesVisitor implements VoidVisitor<Object> {
     }
 
     public void visit(MethodCallExpr n, Object arg) {
+    	
+    	n.setRealScope(currentScope);
+    	
         if (n.getScope() != null) {
             n.getScope().accept(this, arg);
         }
@@ -716,9 +719,11 @@ public final class CreateScopesVisitor implements VoidVisitor<Object> {
         
 		ArrayList<String> paramList = new ArrayList<String>();
 		
-		for (int i = 0; i < n.getParameters().size(); i++) {
-			String[] temp = n.getParameters().get(i).toString().split(" ");
-			paramList.add(temp[0]);
+		if (n.getParameters() != null) {
+			for (int i = 0; i < n.getParameters().size(); i++) {
+				String[] temp = n.getParameters().get(i).toString().split(" ");
+				paramList.add(temp[0]);
+			}
 		}
         
         MethodSymbol methodSymbol = new MethodSymbol(scopeName, type, enclosingScope, n.getBeginLine(), paramList);

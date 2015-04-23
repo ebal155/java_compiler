@@ -10,16 +10,10 @@ public class Test {
 	
 	public static void main(String args[]) {
 		Del handler = DelegateMethod;
-		//handler("Hello World");
-		Dog dog = new Dog();
+		handler("Hello World", 5);
 	}
 
 	public class Dog{
 	}
 
 }
-
-
-//Define delegateSymbol in the scope
-//resolve DelegateMethod
-//compre with delegatesymbol with methodsymbol

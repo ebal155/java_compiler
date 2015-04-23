@@ -780,7 +780,7 @@ public class DefineSymbolsVisitor implements VoidVisitor<Object>{
         			ClassType cType = new ClassType(stringType);
         			//type name, type and line number (0 for classes)
         			type = new TypeSymbol(stringType,cType, 0);
-        		}else{
+    			}else{
         		//Otherwise type doesnt exist
         			throw new A2SemanticsException(stringType + " is not a defined type on line " + n.getBeginLine());
         		}
@@ -788,7 +788,6 @@ public class DefineSymbolsVisitor implements VoidVisitor<Object>{
         	
             VariableSymbol b = new VariableSymbol(v.getId().toString(), type, n.getBeginLine());
             scope.define(b);
-            
         }
            
         n.getType().accept(this, arg);    

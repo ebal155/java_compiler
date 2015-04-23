@@ -106,6 +106,7 @@ import japa.parser.ast.stmt.TypeDeclarationStmt;
 import japa.parser.ast.stmt.WhileStmt;
 import japa.parser.ast.symtab.DelegateReturnType;
 import japa.parser.ast.symtab.DelegateSymbol;
+import japa.parser.ast.symtab.MethodSymbol;
 import japa.parser.ast.symtab.Scope;
 import japa.parser.ast.type.ClassOrInterfaceType;
 import japa.parser.ast.type.PrimitiveType;
@@ -114,14 +115,17 @@ import japa.parser.ast.type.Type;
 import japa.parser.ast.type.VoidType;
 import japa.parser.ast.type.WildcardType;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import se701.A2SemanticsException;
 
 /**
  * @author Julio Vilmar Gesser
  */
 
-public final class DelegateVisitor implements VoidVisitor<Object> {
+public final class ResolveDelegateVisitor implements VoidVisitor<Object> {
 
 
     private void printModifiers(int modifiers) {
@@ -544,9 +548,11 @@ public final class DelegateVisitor implements VoidVisitor<Object> {
     }
 
     public void visit(MethodCallExpr n, Object arg) {
+    	
         if (n.getScope() != null) {
             n.getScope().accept(this, arg);
         }
+        
         printTypeArgs(n.getTypeArgs(), arg);
         if (n.getArgs() != null) {
             for (Iterator<Expression> i = n.getArgs().iterator(); i.hasNext();) {
@@ -556,6 +562,7 @@ public final class DelegateVisitor implements VoidVisitor<Object> {
                 }
             }
         }
+        
     }
 
     public void visit(ObjectCreationExpr n, Object arg) {
@@ -717,6 +724,34 @@ public final class DelegateVisitor implements VoidVisitor<Object> {
 
         for (Iterator<VariableDeclarator> i = n.getVars().iterator(); i.hasNext();) {
             VariableDeclarator v = i.next();
+            
+        	Scope scope = n.getScope();
+            
+            String variableType = n.getType().toString();
+                        
+            //Logic for declaring delegates
+            //Check if the right side exists (it is being assigned on declaration) 
+            if (v.getInit() != null && (scope.resolve(variableType) instanceof DelegateSymbol)) {
+
+            	String variableAssignmentName = v.getInit().toString();
+            	//Check if a method is being assigned to the delegate variable
+	            if (scope.resolve(variableAssignmentName) instanceof MethodSymbol) {
+	            	MethodSymbol methodSymbol= (MethodSymbol) scope.resolve(v.getInit().toString());
+	                DelegateSymbol delegateSymbol = (DelegateSymbol) scope.resolve(n.getType().toString());
+	                
+	                //Check if the params of the delegate and the method matches
+	                if (!methodSymbol.getParams().equals(delegateSymbol.getParams())) {
+	                	throw new A2SemanticsException("The parameters of the delegate " + delegateSymbol.getName() +
+	                			" and " + methodSymbol.getName() + " do not match on line "
+	                			+ n.getBeginLine());
+	                }
+	                
+	            }else {
+	            	throw new A2SemanticsException("The assignment on the delegate " + v.getId() + " has to be a method " + 
+	            			"on line " + n.getBeginLine());
+	            }
+            }
+            
             v.accept(this, arg);
             if (i.hasNext()) {
             }

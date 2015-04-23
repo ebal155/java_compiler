@@ -763,35 +763,8 @@ public class CheckExpressionScopeVisitor implements VoidVisitor<Object>{
         n.getType().accept(this, arg);    
         
         for (Iterator<VariableDeclarator> i = n.getVars().iterator(); i.hasNext();) {
-        	
-        	Scope scope = n.getScope();
-        	
+        	        	
             VariableDeclarator v = i.next();
-            
-            
-            String variableType = n.getType().toString();
-            
-            //Logic for declaring delegates
-            //Check if the right side exists (it is being assigned on declaration) 
-            if (v.getInit() != null && (scope.resolve(variableType) instanceof DelegateSymbol)) {
-            	String variableAssignmentName = v.getInit().toString();
-	            if (scope.resolve(variableAssignmentName) instanceof MethodSymbol) {
-	            	MethodSymbol methodSymbol= (MethodSymbol) scope.resolve(v.getInit().toString());
-	                DelegateSymbol delegateSymbol = (DelegateSymbol) scope.resolve(n.getType().toString());
-	                
-	                if (!methodSymbol.getParams().equals(delegateSymbol.getParams())) {
-	                	throw new A2SemanticsException("The parameters of the delegate " + delegateSymbol.getName() +
-	                			" and " + methodSymbol.getName() + " do not match on line "
-	                			+ n.getBeginLine());
-	                }
-	                
-	            }else {
-	            	throw new A2SemanticsException("The assignment on the delegate " + v.getId() + " has to be a name of a method " + 
-	            			"on line " + n.getBeginLine());
-	            }
-            }else{
-            	//Do the logic for types that ARENT delegates!
-            }
             
             v.accept(this, arg);
             if (i.hasNext()) {

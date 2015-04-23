@@ -21,6 +21,7 @@
  */
 package japa.parser.ast.expr;
 
+import japa.parser.ast.symtab.Scope;
 import japa.parser.ast.type.Type;
 import japa.parser.ast.visitor.GenericVisitor;
 import japa.parser.ast.visitor.VoidVisitor;
@@ -33,6 +34,8 @@ import java.util.List;
 public final class MethodCallExpr extends Expression {
 
     private final Expression scope;
+    
+    private Scope realScope;
 
     private final List<Type> typeArgs;
 
@@ -48,6 +51,14 @@ public final class MethodCallExpr extends Expression {
         this.args = args;
     }
 
+    public void setRealScope(Scope realScope) {
+    	this.realScope = realScope;
+    }
+    
+    public Scope getRealScope() {
+    	return this.realScope;
+    }
+    
     public Expression getScope() {
         return scope;
     }
