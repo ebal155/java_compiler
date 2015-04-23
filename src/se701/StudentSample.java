@@ -2,16 +2,28 @@ public class Test {
 
 
 
+
+
     public static void DelegateMethod(String message, int b) {
     }
 
-    public void lala(String m, int a) {
+    public static void DelegateMethod2(String message, int b) {
+    }
+
+    public Dog lala(int m, int a) {
+    }
+
+    public void ShowOff(Del abc) {
     }
 
     public static void main(String args[]) {
         Del handler = DelegateMethod;
-        Del handler2 = lala;
+        Del handler3 = DelegateMethod2;
+        Del2 handler2 = lala;
         handler("Hello World", 5);
+        handler2(5, 5);
+        ShowOff(handler);
+        DelegateMethod("hello world", 5);
     }
 
     public class Dog {

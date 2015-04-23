@@ -90,6 +90,7 @@ import japa.parser.ast.symtab.Scope;
 import japa.parser.ast.symtab.Symbol;
 import japa.parser.ast.symtab.SymtabType;
 import japa.parser.ast.symtab.TypeSymbol;
+import japa.parser.ast.symtab.VariableSymbol;
 import japa.parser.ast.type.ClassOrInterfaceType;
 import japa.parser.ast.type.PrimitiveType;
 import japa.parser.ast.type.ReferenceType;
@@ -609,18 +610,30 @@ public class TypeCheckVisitor implements VoidVisitor<Object>{
 
     	String methodName = n.getName();
     	Scope scope = n.getRealScope();
-    	//Get the type of the method name
-    	String type = scope.resolve(methodName).getType().getName();
+    	//Get the type of the delegate object
+    	Symbol symbol = scope.resolve(methodName);
+    	String type = null;
+    	if (symbol != null) {
+    		type = scope.resolve(methodName).getType().getName();
+    	}else{
+    		throw new A2SemanticsException("The method " + methodName + " is not defined on line " + n.getBeginLine());
+    	}
+    	
     	ArrayList<String> params = null;
     	
     	//Resolve the type and check if it exists, and if it is delegate or a method
-    	if (scope.resolve(type) != null) {
-	    	if (scope.resolve(type) instanceof DelegateSymbol) {
-	    		params = ((DelegateSymbol) scope.resolve(type)).getParams();
-	    	}else if (scope.resolve(type) instanceof MethodSymbol) {
-	    		params = ((MethodSymbol) scope.resolve(type)).getParams();
+    	if (scope.resolve(methodName) instanceof VariableSymbol) {
+	    	if (scope.resolve(type) != null) {
+		    	if (scope.resolve(type) instanceof DelegateSymbol) {
+		    		params = ((DelegateSymbol) scope.resolve(type)).getParams();
+		    	}else if (scope.resolve(type) instanceof MethodSymbol) {
+		    		params = ((MethodSymbol) scope.resolve(type)).getParams();
+		    	}
 	    	}
+    	}else if (scope.resolve(methodName) instanceof MethodSymbol) {
+    		params = (((MethodSymbol) scope.resolve(methodName)).getParams());
     	}
+    		
     	
         if (n.getScope() != null) {
             n.getScope().accept(this, arg);

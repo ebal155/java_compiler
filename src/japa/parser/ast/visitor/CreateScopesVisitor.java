@@ -726,6 +726,7 @@ public final class CreateScopesVisitor implements VoidVisitor<Object> {
 		}
         
         MethodSymbol methodSymbol = new MethodSymbol(scopeName, type, enclosingScope, n.getBeginLine(), paramList);
+        
         currentScope = methodSymbol;
         n.setScope(currentScope);
         
