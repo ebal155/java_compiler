@@ -2,33 +2,42 @@ package se701;
 
 public class StudentSample {
 
-    int a;
-
-    public interface MessagePrinterBehaviour {
-        public String MessagePrinter(String message);
+    public interface doShowBehaviour {
+        public void doShow(String s);
     }
+
+    private static boolean someBoolean = false;
 
     public static void main(String[] args) {
-        MessagePrinterBehaviour handler = new DelegateMethodAImplementation();
-        handler.MessagePrinter("yes");
-        handler = new DelegateMethodBImplementation();
-        handler.MessagePrinter("also yes");
-        String[] y;
+        doShowBehaviour item = new showImplementation();
+        item.doShow("Hello World");
+        item = new displayImplementation();
+        item.doShow("Hello World");
+        item = new otherDisplayImplementation();
+        item.doShow("Hello World");
     }
 
-    public static class DelegateMethodAImplementation implements MessagePrinterBehaviour {
-        public String MessagePrinter(String msg) {
-            return msg;
+    public static class showImplementation implements doShowBehaviour {
+        public void doShow(String s) {
+            System.out.println(s);
         }
     }
 
-    public static class DelegateMethodBImplementation implements MessagePrinterBehaviour {
-        public String MessagePrinter(String msg) {
-            return "other";
+    public static class displayImplementation implements doShowBehaviour {
+        public void doShow(String s) {
+            for (int i = 0; i < 5; i++) {
+                System.out.println(s + " " + i);
+            }
         }
     }
 
-    public void foo(boolean x) {
-        a = 3;
+    public static class otherDisplayImplementation implements doShowBehaviour {
+        public void doShow(String s) {
+            if (someBoolean) {
+                System.out.println(s);
+            } else {
+                System.out.println(s + " something interesting");
+            }
+        }
     }
 }

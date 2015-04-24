@@ -1,21 +1,25 @@
 package se701;
+
 public class StudentSample {
+
     class Meg {
+
         public void pls() {
         }
     }
+
     class Dog extends Meg {
+
         public void hi() {
         }
     }
+
     public void bar() {
-        {
-        	int jaja = 10;
-        }
-        
-        jaja = 5; //fails, out of scope
+        Dog dog = new Meg();
     }
 }
+
 class Los {
+
     int jeje = 10;
 }

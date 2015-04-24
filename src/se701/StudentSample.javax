@@ -1,33 +1,39 @@
 package se701;
 
 public class StudentSample {
-	int a;
 	
-	public delegate String MessagePrinter(String message);
-	
+ 	public delegate void doShow(String s);
+
+	private static boolean someBoolean = false;
+
 	public static void main(String[] args) {
-		MessagePrinter handler = DelegateMethodA;
-		handler("yes");
-		handler = DelegateMethodB;
-		handler("also yes");
-		
-		String[] y;
-		
+        doShow item = show;
+       	item("Hello World");
+		item = display;
+       	item("Hello World");
+       	item = otherDisplay;
+       	item("Hello World");
+
+    }
+	
+	//These java classes will be defined as static, instead of creating a StudentSample object and referencing
+	//the class through that object. This simplification is useful since I cannot define the classes in different
+	//files.
+	
+	public void show(String s) { 
+		System.out.println(s);
 	}
 	
-	public String DelegateMethodA(String msg)
-	{
-		return msg;
+	public void display(String s) {
+		for (int i = 0; i < 5; i++) { 
+			System.out.println(s + " " + i);
+		}
 	}
-	
-	public String DelegateMethodB(String msg)
-	{
-		return "other";
-	}
-	
-	public void foo(boolean x) {
-		a = 3; 
-		
-		//break;
+	public void otherDisplay(String s) {
+		if (someBoolean) {
+			System.out.println(s);
+		}else{
+			System.out.println(s + " something interesting");
+		}
 	}
 }

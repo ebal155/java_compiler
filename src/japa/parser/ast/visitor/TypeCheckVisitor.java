@@ -639,22 +639,25 @@ public class TypeCheckVisitor implements VoidVisitor<Object>{
             n.getScope().accept(this, arg);
         }
         
+        
         printTypeArgs(n.getTypeArgs(), arg);
-        if (n.getArgs().size() == params.size()) {
-        	//Count to keep track of aramlist
-        	int count = 0;
-	        if (n.getArgs() != null) {
-	            for (Iterator<Expression> i = n.getArgs().iterator(); i.hasNext();) {
-	                Expression e = i.next();
-	                //Send the expected type of the parameter to the expression statement
-	                e.accept(this, params.get(count));
-	                count++;
-	                if (i.hasNext()) {
-	                }
-	            }
+        if (n.getArgs() != null && params != null) {
+	        if (n.getArgs().size() == params.size()) {
+	        	//Count to keep track of paramlist
+	        	int count = 0;
+		        if (n.getArgs() != null) {
+		            for (Iterator<Expression> i = n.getArgs().iterator(); i.hasNext();) {
+		                Expression e = i.next();
+		                //Send the expected type of the parameter to the expression statement
+		                e.accept(this, params.get(count));
+		                count++;
+		                if (i.hasNext()) {
+		                }
+		            }
+		        }
+	        }else{
+	        	throw new A2SemanticsException("The parameters do not match for the " + n.getName() + " method/delegate on line " + n.getBeginLine());
 	        }
-        }else{
-        	throw new A2SemanticsException("The parameters do not much for the " + n.getName() + " method/delegate on line " + n.getBeginLine());
         }
     }
 
@@ -1088,7 +1091,7 @@ public class TypeCheckVisitor implements VoidVisitor<Object>{
             }
         }
         if (n.getCompare() != null) {
-            n.getCompare().accept(this, arg);
+            n.getCompare().accept(this, "int");
         }
         if (n.getUpdate() != null) {
             for (Iterator<Expression> i = n.getUpdate().iterator(); i.hasNext();) {
