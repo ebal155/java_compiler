@@ -2,13 +2,18 @@ package se701;
 
 public class StudentSample {
 
-
-    public void hue(int lel) {
-        lel = 5;
-        boolean sds = false;
-
-        
-        if(sds<5) {}
-    }
+	public interface TestInterface {
+		public void testMethodOne(int a);
+		public int testMethodTwo(String b);
+	}
+	
+	public class TestClass implements TestInterface {
+		public void testMethodOne(int a) {
+		}
+		
+		public int testMethodTwo(String b) {
+		
+		}
+	}	
 
 }

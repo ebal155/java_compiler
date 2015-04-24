@@ -264,16 +264,14 @@ public final class CreateScopesVisitor implements VoidVisitor<Object> {
         if (n.isInterface()) {
         	scope = new InterfaceSymbol(n.getName(), null,currentScope, n.getBeginLine());
         } else {
-        	
     		scope = new ClassSymbol(n.getName(),currentScope, n.getBeginLine());
-
-        	currentScope = scope;
-        	n.setScope(currentScope);
-        	
-        	scope.getEnclosingScope().define((Symbol)scope);
-        	
         }
-
+        
+    	currentScope = scope;
+    	n.setScope(currentScope);
+    	
+    	scope.getEnclosingScope().define((Symbol) scope);
+    	
         printTypeParameters(n.getTypeParameters(), arg);
 
         if (n.getExtends() != null) {
@@ -691,6 +689,7 @@ public final class CreateScopesVisitor implements VoidVisitor<Object> {
     }
 
     public void visit(MethodDeclaration n, Object arg) {
+    	
     	if (n.getJavaDoc() != null) {
             n.getJavaDoc().accept(this, arg);
         }
@@ -726,6 +725,10 @@ public final class CreateScopesVisitor implements VoidVisitor<Object> {
 		}
         
         MethodSymbol methodSymbol = new MethodSymbol(scopeName, type, enclosingScope, n.getBeginLine(), paramList);
+        
+        if (currentScope instanceof InterfaceSymbol) {
+        	((InterfaceSymbol) currentScope).addMethodToImplement(scopeName);
+        }
         
         currentScope = methodSymbol;
         n.setScope(currentScope);

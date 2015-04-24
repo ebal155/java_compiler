@@ -86,6 +86,7 @@ import japa.parser.ast.stmt.WhileStmt;
 import japa.parser.ast.symtab.ClassSymbol;
 import japa.parser.ast.symtab.DelegateSymbol;
 import japa.parser.ast.symtab.GlobalScope;
+import japa.parser.ast.symtab.InterfaceSymbol;
 import japa.parser.ast.symtab.MethodSymbol;
 import japa.parser.ast.symtab.Scope;
 import japa.parser.ast.symtab.Symbol;
@@ -234,9 +235,7 @@ public class ResolveExpressionVisitor implements VoidVisitor<Object>{
         printModifiers(n.getModifiers());
         
         if (n.isInterface()) {
-        	
         } else {
-        	
         }
 
         printTypeParameters(n.getTypeParameters(), arg);
@@ -269,9 +268,20 @@ public class ResolveExpressionVisitor implements VoidVisitor<Object>{
         }
 
         if (n.getImplements() != null) {
+
             for (Iterator<ClassOrInterfaceType> i = n.getImplements().iterator(); i.hasNext();) {
                 ClassOrInterfaceType c = i.next();
-                c.accept(this, arg);
+            	Scope scope = n.getScope();
+            	InterfaceSymbol interfaceScope = (InterfaceSymbol) scope.getEnclosingScope().resolve(c.toString());
+
+            	for (String s: interfaceScope.getMethodsToImplement()) {
+            		if (scope.resolve(s) == null) {
+            			throw new A2SemanticsException("The class " + n.getName() + " must implement all of " 
+            					+ interfaceScope.getScopeName() + "'s methods. Missing method " + s + ".");
+            		}
+            	}
+            	
+            	c.accept(this, arg);
                 if (i.hasNext()) {
                 }
             }
@@ -684,7 +694,7 @@ public class ResolveExpressionVisitor implements VoidVisitor<Object>{
     }
 
     public void visit(MethodDeclaration n, Object arg) {
-
+    	
     	if (n.getJavaDoc() != null) {
             n.getJavaDoc().accept(this, arg);
         }
