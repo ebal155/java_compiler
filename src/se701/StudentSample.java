@@ -1,7 +1,13 @@
 public class Test {
 
+    public interface DelBehaviour {
+        public void Del(String message, int a);
+    }
 
 
+    public interface Del2Behaviour {
+        public Dog Del2(int a, int b);
+    }
 
 
     public static void DelegateMethod(String message, int b) {

@@ -1302,5 +1302,19 @@ public final class SourceToSourceVisitor implements VoidVisitor<Object> {
 
 	@Override
 	public void visit(DelegateDeclaration n, Object arg) {
+		printer.printLn("public interface "  + n.getName() + "Behaviour {");
+		printer.indent();
+		printModifiers(n.getModifiers());
+		printer.print(n.getType() + " " + n.getName() + "(");
+		List<Parameter> params = n.getParameters();
+		for (int i = 0; i < params.size(); i++) {
+			printer.print(params.get(i) + "");
+			if (i != params.size() - 1) {
+				printer.print(", ");
+			}
+		}
+		printer.printLn(");");
+		printer.unindent();
+		printer.printLn("}");
 	}
 }
