@@ -1,37 +1,32 @@
-public class Test {
+public class StudentSample {
 
-    public interface DelBehaviour {
-        public void Del(String message, int a);
+    int a;
+
+    public interface MessagePrinterBehaviour {
+        public String MessagePrinter(String message);
     }
 
-
-    public interface Del2Behaviour {
-        public Dog Del2(int a, int b);
+    public static void main(String[] args) {
+        MessagePrinterBehaviour handler = new DelegateMethodAImplementation();
+        handler("yes");
+        handler = new DelegateMethodBImplementation();
+        handler("also yes");
+        String[] y;
     }
 
-
-    public static void DelegateMethod(String message, int b) {
+    public class DelegateMethodAImplementation implements MessagePrinterBehaviour {
+        public String MessagePrinter(String msg) {
+            return msg;
+        }
     }
 
-    public static void DelegateMethod2(String message, int b) {
+    public class DelegateMethodBImplementation implements MessagePrinterBehaviour {
+        public String MessagePrinter(String msg) {
+            return "other";
+        }
     }
 
-    public Dog lala(int m, int a) {
-    }
-
-    public void ShowOff(Del abc) {
-    }
-
-    public static void main(String args[]) {
-        Del handler = DelegateMethod;
-        Del handler3 = DelegateMethod2;
-        Del2 handler2 = lala;
-        handler("Hello World", 5);
-        handler2(5, 5);
-        ShowOff(handler);
-        DelegateMethod("hello world", 5);
-    }
-
-    public class Dog {
+    public void foo(boolean x) {
+        a = 3;
     }
 }

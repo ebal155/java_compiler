@@ -8,10 +8,10 @@ import java.io.PrintWriter;
 import japa.parser.JavaParser;
 import japa.parser.ParseException;
 import japa.parser.ast.CompilationUnit;
-import japa.parser.ast.visitor.CheckExpressionScopeVisitor;
 import japa.parser.ast.visitor.CreateScopesVisitor;
 import japa.parser.ast.visitor.DefineSymbolsVisitor;
 import japa.parser.ast.visitor.ResolveDelegateVisitor;
+import japa.parser.ast.visitor.ResolveExpressionVisitor;
 import japa.parser.ast.visitor.SourceToSourceVisitor;
 import japa.parser.ast.visitor.TypeCheckVisitor;
 
@@ -27,17 +27,14 @@ public class A2Compiler {
 		CompilationUnit ast = parser.CompilationUnit();
 		
 		// perform visit N 
-		SourceToSourceVisitor printVisitor = new SourceToSourceVisitor();
-		ast.accept(printVisitor, null);
-		
 		CreateScopesVisitor createScopesVisitor = new CreateScopesVisitor();
 		ast.accept(createScopesVisitor, null);
 		
 		DefineSymbolsVisitor defineSymbolsVisitor = new DefineSymbolsVisitor();
 		ast.accept(defineSymbolsVisitor, null);
 		
-		CheckExpressionScopeVisitor checkExpressionVisitor = new CheckExpressionScopeVisitor();
-		ast.accept(checkExpressionVisitor, null);
+		ResolveExpressionVisitor resolveExpressionVisitor = new ResolveExpressionVisitor();
+		ast.accept(resolveExpressionVisitor, null);
 		
 		TypeCheckVisitor typeCheckVisitor = new TypeCheckVisitor();
 		ast.accept(typeCheckVisitor, null);
@@ -45,6 +42,8 @@ public class A2Compiler {
 		ResolveDelegateVisitor delegateVisitor = new ResolveDelegateVisitor();
 		ast.accept(delegateVisitor, null);
 
+		SourceToSourceVisitor printVisitor = new SourceToSourceVisitor();
+		ast.accept(printVisitor, null);
 		
 		String result = printVisitor.getSource();
 		

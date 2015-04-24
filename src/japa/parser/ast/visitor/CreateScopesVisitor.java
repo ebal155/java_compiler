@@ -437,9 +437,8 @@ public final class CreateScopesVisitor implements VoidVisitor<Object> {
 
     public void visit(AssignExpr n, Object arg) {
         n.getTarget().accept(this, arg);
-        
         n.setScope(currentScope);
-        
+
         switch (n.getOperator()) {
             case assign:
                 break;

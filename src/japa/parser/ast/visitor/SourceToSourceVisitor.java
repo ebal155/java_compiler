@@ -104,6 +104,9 @@ import japa.parser.ast.stmt.ThrowStmt;
 import japa.parser.ast.stmt.TryStmt;
 import japa.parser.ast.stmt.TypeDeclarationStmt;
 import japa.parser.ast.stmt.WhileStmt;
+import japa.parser.ast.symtab.DelegateSymbol;
+import japa.parser.ast.symtab.Scope;
+import japa.parser.ast.symtab.Symbol;
 import japa.parser.ast.type.ClassOrInterfaceType;
 import japa.parser.ast.type.PrimitiveType;
 import japa.parser.ast.type.ReferenceType;
@@ -111,6 +114,8 @@ import japa.parser.ast.type.Type;
 import japa.parser.ast.type.VoidType;
 import japa.parser.ast.type.WildcardType;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -120,6 +125,8 @@ import java.util.List;
 
 public final class SourceToSourceVisitor implements VoidVisitor<Object> {
 
+	private HashMap<String,String> classesToCreate = new HashMap<String,String>();
+	
     private final SourcePrinter printer = new SourcePrinter();
 
     public String getSource() {
@@ -490,8 +497,23 @@ public final class SourceToSourceVisitor implements VoidVisitor<Object> {
     }
 
     public void visit(AssignExpr n, Object arg) {
+    	
+    	Scope scope = n.getScope();
+    	String type = scope.resolve(n.getTarget().toString()).getType().getName();
+    	Symbol symbol = scope.resolve(type);
+    	boolean isDelegate = symbol instanceof DelegateSymbol;
+    	
+    	if (isDelegate) {
+    		
+            String delegateType = symbol.getName();
+            String methodName = n.getValue().toString();
+            
+            classesToCreate.put(methodName, delegateType);
+    	}
+    	
         n.getTarget().accept(this, arg);
-        printer.print(" ");
+    	printer.print(" ");
+        
         switch (n.getOperator()) {
             case assign:
                 printer.print("=");
@@ -530,8 +552,13 @@ public final class SourceToSourceVisitor implements VoidVisitor<Object> {
                 printer.print(">>>=");
                 break;
         }
-        printer.print(" ");
-        n.getValue().accept(this, arg);
+        
+    	printer.print(" ");
+    	if (isDelegate) {
+    		printer.print("new " + n.getValue() + "Implementation()");
+    	}else{
+            n.getValue().accept(this, arg);
+    	}
     }
 
     public void visit(BinaryExpr n, Object arg) {
@@ -825,6 +852,17 @@ public final class SourceToSourceVisitor implements VoidVisitor<Object> {
     }
 
     public void visit(MethodDeclaration n, Object arg) {
+    	
+    	boolean isDelegate = classesToCreate.get(n.getName()) != null;
+    	
+    	if (isDelegate) {
+    		String className = n.getName() + "Implementation";
+    		String delegateInterfaceName = classesToCreate.get(n.getName()) + "Behaviour";
+    		printer.printLn("public class " + className + 
+    						" implements " + delegateInterfaceName + " {");
+    		printer.indent();
+    	}
+    	
         if (n.getJavaDoc() != null) {
             n.getJavaDoc().accept(this, arg);
         }
@@ -838,7 +876,11 @@ public final class SourceToSourceVisitor implements VoidVisitor<Object> {
 
         n.getType().accept(this, arg);
         printer.print(" ");
-        printer.print(n.getName());
+        if (isDelegate) {
+        	printer.print(classesToCreate.get(n.getName()));
+        }else{
+            printer.print(n.getName());
+        }
 
         printer.print("(");
         if (n.getParameters() != null) {
@@ -872,6 +914,12 @@ public final class SourceToSourceVisitor implements VoidVisitor<Object> {
             printer.print(" ");
             n.getBody().accept(this, arg);
         }
+        
+    	if (isDelegate) {
+    		printer.printLn();
+    		printer.unindent();
+    		printer.print("}");
+    	}
     }
 
     public void visit(Parameter n, Object arg) {
@@ -915,15 +963,38 @@ public final class SourceToSourceVisitor implements VoidVisitor<Object> {
         printAnnotations(n.getAnnotations(), arg);
         printModifiers(n.getModifiers());
 
+        Scope scope = n.getScope();
+        boolean isDelegate = scope.resolve(n.getType().toString()) instanceof DelegateSymbol;
+        
         n.getType().accept(this, arg);
+        if (isDelegate) {
+        	printer.print("Behaviour");
+        }
+        
         printer.print(" ");
 
-        for (Iterator<VariableDeclarator> i = n.getVars().iterator(); i.hasNext();) {
-            VariableDeclarator v = i.next();
-            v.accept(this, arg);
-            if (i.hasNext()) {
-                printer.print(", ");
-            }
+        if (!isDelegate) {
+	        for (Iterator<VariableDeclarator> i = n.getVars().iterator(); i.hasNext();) {
+	            VariableDeclarator v = i.next();
+	            v.accept(this, isDelegate);
+	            if (i.hasNext()) {
+	                printer.print(", ");
+	            }
+	        }
+        }else{
+        	for (Iterator<VariableDeclarator> i = n.getVars().iterator(); i.hasNext();) {
+	            VariableDeclarator v = i.next();
+	            if (v.getInit() != null) {
+	            	printer.print(v.getId() + " = new " + v.getInit() + "Implementation()");
+	            }else{
+	            	printer.print(v.getId() + ";");
+	            }
+	            
+	            String delegateType = scope.resolve(n.getType().toString()).getName();
+	            String methodName = v.getInit().toString();
+	            
+	            classesToCreate.put(methodName, delegateType);
+	        }
         }
     }
 
@@ -1302,8 +1373,27 @@ public final class SourceToSourceVisitor implements VoidVisitor<Object> {
 
 	@Override
 	public void visit(DelegateDeclaration n, Object arg) {
-		printer.printLn("public interface "  + n.getName() + "Behaviour {");
+		String interfaceName = n.getName() + "Behaviour";
+		printer.printLn("public interface "  + interfaceName + " {");
 		printer.indent();
+		printDelegateMethodDeclaration(n);
+		printer.printLn(";");
+		printer.unindent();
+		printer.print("}");
+		
+//		printer.printLn();
+		
+//		String className = n.getName() + "Implementation";
+//		printer.printLn("public class " + className + " implements " + interfaceName + " {");
+//		printer.indent();
+//		printDelegateMethodDeclaration(n);
+//		printer.printLn("{");
+//		printer.printLn("}");
+//		printer.unindent();
+//		printer.printLn("}");
+	}
+	
+	public void printDelegateMethodDeclaration(DelegateDeclaration n) {
 		printModifiers(n.getModifiers());
 		printer.print(n.getType() + " " + n.getName() + "(");
 		List<Parameter> params = n.getParameters();
@@ -1313,8 +1403,6 @@ public final class SourceToSourceVisitor implements VoidVisitor<Object> {
 				printer.print(", ");
 			}
 		}
-		printer.printLn(");");
-		printer.unindent();
-		printer.printLn("}");
+		printer.print(")");
 	}
 }

@@ -1,39 +1,31 @@
-//FAIL
-public class Test {
-
-	public delegate void Del(String message, int a);
-	public delegate Dog Del2(int a, int b);
+public class StudentSample {
+	int a;
 	
-	public static void DelegateMethod(String message, int b) {
+	public delegate String MessagePrinter(String message);
+	
+	public static void main(String[] args) {
+		MessagePrinter handler = DelegateMethodA;
+		handler("yes");
+		handler = DelegateMethodB;
+		handler("also yes");
+		
+		String[] y;
 		
 	}
 	
-	public static void DelegateMethod2(String message, int b) {
+	public String DelegateMethodA(String msg)
+	{
+		return msg;
+	}
+	
+	public String DelegateMethodB(String msg)
+	{
+		return "other";
+	}
+	
+	public void foo(boolean x) {
+		a = 3; 
 		
+		//break;
 	}
-	
-	public Dog lala(int m, int a) {
-	
-	}
-	
-	public void ShowOff(Del abc) {
-	
-	}
-	
-	public static void main(String args[]) {
-	
-		Del handler = DelegateMethod;
-		Del handler3 = DelegateMethod2;
-		Del2 handler2 = lala;
-		
-		handler("Hello World", 5);
-		handler2(5,5);
-		ShowOff(handler);
-		DelegateMethod("hello world", 5);
-		
-	}
-
-	public class Dog{
-	}
-
 }
