@@ -29,11 +29,9 @@ public class Test {
 		handler("Hello World", 5);
 		handler2(5,5);
 		ShowOff(handler);
-		DelegateMEthod("hello world", 5);
+		DelegateMethod("hello world", 5);
 		
 	}
-
-
 
 	public class Dog{
 	}
