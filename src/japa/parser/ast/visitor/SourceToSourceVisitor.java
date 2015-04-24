@@ -504,7 +504,7 @@ public final class SourceToSourceVisitor implements VoidVisitor<Object> {
     	boolean isDelegate = symbol instanceof DelegateSymbol;
     	
     	if (isDelegate) {
-    		
+            //Store the delegate's type and the corresponding method assigned inside the HashMap
             String delegateType = symbol.getName();
             String methodName = n.getValue().toString();
             
@@ -555,6 +555,8 @@ public final class SourceToSourceVisitor implements VoidVisitor<Object> {
         
     	printer.print(" ");
     	if (isDelegate) {
+    		//If delegate, instantiate a new Class that implements the delegate interface,
+    		//instead of passing the method reference to the variable
     		printer.print("new " + n.getValue() + "Implementation()");
     	}else{
             n.getValue().accept(this, arg);
@@ -853,8 +855,15 @@ public final class SourceToSourceVisitor implements VoidVisitor<Object> {
 
     public void visit(MethodDeclaration n, Object arg) {
     	
+    	//NOTE: Source-to-source would require more than one visitor if the delegate variable is declared
+    	//after the method declaration, but I put it all in one visitor for convenience.
+    	
+    	//Checking if this method has been assigned to a delegate by passing its name as a key
+    	//to the classesToCreate HashMap. If it returns the delegate name (or not null), then it is a 
+    	//delegate.
     	boolean isDelegate = classesToCreate.get(n.getName()) != null;
     	
+    	//If it is a delegate, create an inner class which implements the corresponding delegate interface
     	if (isDelegate) {
     		String className = n.getName() + "Implementation";
     		String delegateInterfaceName = classesToCreate.get(n.getName()) + "Behaviour";
@@ -964,9 +973,12 @@ public final class SourceToSourceVisitor implements VoidVisitor<Object> {
         printModifiers(n.getModifiers());
 
         Scope scope = n.getScope();
+        
+        //Check if is a delegate declaration
         boolean isDelegate = scope.resolve(n.getType().toString()) instanceof DelegateSymbol;
         
         n.getType().accept(this, arg);
+        //If delegate declaration, append Behaviour to the type (this is the delegate's interface equivalent)
         if (isDelegate) {
         	printer.print("Behaviour");
         }
@@ -990,6 +1002,7 @@ public final class SourceToSourceVisitor implements VoidVisitor<Object> {
 	            	printer.print(v.getId() + ";");
 	            }
 	            
+	            //Store the delegate's type and the corresponding method assigned inside the HashMap
 	            String delegateType = scope.resolve(n.getType().toString()).getName();
 	            String methodName = v.getInit().toString();
 	            
@@ -1373,26 +1386,19 @@ public final class SourceToSourceVisitor implements VoidVisitor<Object> {
 
 	@Override
 	public void visit(DelegateDeclaration n, Object arg) {
+		//Make an interface with the delegates name and append "Behaviour" at the end
 		String interfaceName = n.getName() + "Behaviour";
 		printer.printLn("public interface "  + interfaceName + " {");
 		printer.indent();
+		//Print out the delegates definition as a method inside the interface
 		printDelegateMethodDeclaration(n);
 		printer.printLn(";");
 		printer.unindent();
 		printer.print("}");
 		
-//		printer.printLn();
-		
-//		String className = n.getName() + "Implementation";
-//		printer.printLn("public class " + className + " implements " + interfaceName + " {");
-//		printer.indent();
-//		printDelegateMethodDeclaration(n);
-//		printer.printLn("{");
-//		printer.printLn("}");
-//		printer.unindent();
-//		printer.printLn("}");
 	}
 	
+	//Helper method to print the method definition inside the interface
 	public void printDelegateMethodDeclaration(DelegateDeclaration n) {
 		printModifiers(n.getModifiers());
 		printer.print(n.getType() + " " + n.getName() + "(");
