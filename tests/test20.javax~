@@ -1,0 +1,8 @@
+public class Hello {
+	private int x;
+	public void foo(String x) {
+		this.x = x;
+		{ int y; }
+		{ int y; }
+	}
+}

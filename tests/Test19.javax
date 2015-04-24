@@ -1,9 +1,10 @@
 //FAIL
 public class Forward {
 	public void foo() {
+		int b;
 		int a = x; // OK
-		int b = y; // should be an error
-		int y = 123; // defined in same scope but after
+		b = y; // should be an error
+		int y = 123; // defined in same scope but after “b”
 	}
 	private int x;
 }

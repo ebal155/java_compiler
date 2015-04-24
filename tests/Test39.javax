@@ -1,0 +1,16 @@
+package se701;
+
+public class StudentSample {
+
+
+    public void hue(int lel) {
+        lel = 5;
+        boolean sds = false;
+
+        
+        for (int i=0;i<10;i++){
+        	i=5;
+        }
+    }
+
+}

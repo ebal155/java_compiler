@@ -1,0 +1,20 @@
+package se701;
+
+public class StudentSample {
+
+	Meg meg;
+	
+    public void hue(int lel) {
+        lel = 5;
+        boolean sds = false;
+        return;
+    }
+
+    class Dog {
+    	int lel = 12;
+    }
+    
+    class Meg { }
+
+    Dog dog = new Dog();
+}

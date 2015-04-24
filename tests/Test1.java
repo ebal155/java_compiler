@@ -1,20 +1,13 @@
-package se701;
+interface meg {
+
+    public void earl();
+}
 
 public class StudentSample {
 
-    public interface TestInterface {
-
-        public void testMethodOne(int a);
-
-        public int testMethodTwo(String b);
+    class earl implements meg {
     }
 
-    public class TestClass implements TestInterface {
-
-        public void testMethodOne(int a) {
-        }
-
-        public int testMethodTwo(String b) {
-        }
+    class jay implements meg {
     }
 }

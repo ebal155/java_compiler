@@ -1,0 +1,31 @@
+//PASS
+package se701;
+
+public class StudentSample {
+
+    public void hue(int lel) {
+        lel = 5;
+		//System.out.println(lel);
+		
+		Dog dog = new Dog();
+	}
+        
+    class Meg {
+    	void hue(int lel) {
+            lel = 10;
+    		//System.out.println(lel);
+    	}
+    	
+    	void hi() {}
+    }
+    
+    class Dog extends StudentSample{ //Should pass
+    	Meg meg = new Meg();
+    	
+    	void hue(){
+    		meg.hue(20);
+    	}
+    }
+}
+
+class Los{}

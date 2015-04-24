@@ -1,8 +1,11 @@
-public class Forward {
+public class Test7 {
 
-    public void foo() {
+    public int foo(boolean x) {
+        x = false;
+        return 5;
     }
 
-    public void boo() {
+    public void bar() {
+        int b = 456;
     }
 }

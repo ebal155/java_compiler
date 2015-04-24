@@ -1,4 +1,4 @@
-//FAIL
+// Pass
 public class Test {
 	public int a;
 	class Point {
@@ -8,8 +8,5 @@ public class Test {
 			x = 0; y = 0;
 		}
 	}
-	
-	public void test() {
-		Point p = new Point();
-	}
 }
+

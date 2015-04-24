@@ -1,0 +1,29 @@
+package se701;
+
+public class StudentSample {
+
+    class Meg implements Los {
+
+        public void pls() {
+        }
+
+    }
+
+    interface Los {
+
+        public void pls(int hue);
+        
+        public int GPA(); //Needs to be implemented in Meg
+    }
+
+    class Dog extends Meg {
+
+        public void hi() {
+        }
+    }
+
+    public void bar() {
+        Dog dog = new Dog();
+        dog.pls();
+    }
+}

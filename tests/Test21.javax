@@ -1,11 +1,9 @@
-//PASS
-public class Forward {
-	
-	public void foo() {
-		
+//FAIL
+public class Test7 {
+	public int foo(boolean x) { // no return statement. should fail
+		x = false; // should pass
 	}
-	
-	public void boo() {
-		
+	public void bar() {
+		int b = 456;
 	}
 }

@@ -1,14 +1,11 @@
-//PASS
+//FAIL
 class House { // enclosing scope of Cat
-	int foo() {return 1;}
-	class Animal { // superclass scope of Cat
-		int foo() {return 2;}
-	}
-	class Cat extends Animal {
-		void hi() {
-			System.out.println(foo());
-			System.out.println(this.foo());
-			System.out.println(House.this.foo());
+
+	void point() {
+		if (i < 1) {
+			//plz
 		}
+		
 	}
+
 }

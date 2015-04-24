@@ -1,8 +1,9 @@
 public class Forward {
 
     public void foo() {
+        int b;
         int a = x;
-        int b = y;
+        b = y;
         int y = 123;
     }
 

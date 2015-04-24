@@ -15,7 +15,7 @@ public class A2MainRunner {
 	
 		/* These tests will be testing correctness of your Semantic Analysis visitors. The marker will be using their own files here. */ 
 		 
-		for (int i = 1; i <= 1; i++) { 
+		for (int i = 21; i <= 21; i++) { 
 			String file = "tests"+System.getProperty("file.separator")+"Test"+i+".javax";
 
 			

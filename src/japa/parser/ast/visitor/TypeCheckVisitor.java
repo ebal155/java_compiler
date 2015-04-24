@@ -794,7 +794,22 @@ public class TypeCheckVisitor implements VoidVisitor<Object>{
         if (n.getBody() == null) {
         } else {
         	//Pass in return type to the block statement
-            n.getBody().accept(this, n.getType());
+        	if (!(n.getType().toString().equals("void"))) {
+        		List<Statement> statements = n.getBody().getStmts();
+        		boolean isReturnMissing = true;
+	            for (int i = 0; i < statements.size(); i++) {
+	            	if (statements.get(i) instanceof ReturnStmt) {
+	            		isReturnMissing = false;
+	            	}
+	            }
+	            
+	            if (isReturnMissing) {
+	        		throw new A2SemanticsException(n.getName() + " is missing a return statement of type " 
+            				+ n.getType() + " on line " + n.getBeginLine());
+	            }
+        	}
+            n.getBody().accept(this, n.getType().toString());
+
         }
         
 		

@@ -1,0 +1,41 @@
+package se701;
+
+public class StudentSample {
+
+    public void hue(int lel) {
+        lel = 5;
+		//System.out.println(lel);
+		
+		int integegeg;
+		Dog dog = new Dog();
+		Dog cat;
+		dog.hue();
+	}
+        
+    class Meg {
+    	void hue(int lel) {
+            lel = 10;
+    		//System.out.println(lel);
+    		
+    	StudentSample s = new StudentSample();
+    	s.bar();
+    	}
+
+    	void hi() {}
+    }
+    
+    class Dog extends Meg{
+    	Meg meg = new Meg();
+    	
+    	void hue(){
+    		meg.hue(20);
+    		
+    	}
+    	
+    public void bar(){}
+    }
+}
+
+class Los{
+	int jeje = 10;
+}

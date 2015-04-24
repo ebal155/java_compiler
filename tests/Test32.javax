@@ -1,0 +1,21 @@
+package se701;
+
+
+
+public class StudentSample {
+
+
+	{
+	
+	int kek = 10;
+	
+	}
+	
+	public void hue() {
+		kek = 10; // out of scope
+		int bar = 5;
+		int dasd = 5;
+		
+	}
+
+}

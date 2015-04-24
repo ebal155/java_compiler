@@ -1,0 +1,14 @@
+package se701;
+
+
+
+public class StudentSample {
+
+	public void hue() {
+		kek = 10;
+		int bar = 5;
+		int bar = 5;
+		
+	}
+
+}

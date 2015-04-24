@@ -12,8 +12,4 @@ public class Test {
             y = 0;
         }
     }
-
-    public void test() {
-        Point p = new Point();
-    }
 }

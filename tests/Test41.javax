@@ -1,0 +1,13 @@
+//FAIL
+package se701;
+
+public class StudentSample {
+
+    public void hue(int lel) {
+        lel = 5;
+        int hhh;
+        boolean sds = false;
+        if (lel < hhh) { //NOT INITIALIZED
+        }
+    }
+}
