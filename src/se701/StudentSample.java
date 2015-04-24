@@ -1,3 +1,5 @@
+package se701;
+
 public class StudentSample {
 
     int a;
@@ -8,19 +10,19 @@ public class StudentSample {
 
     public static void main(String[] args) {
         MessagePrinterBehaviour handler = new DelegateMethodAImplementation();
-        handler("yes");
+        handler.MessagePrinter("yes");
         handler = new DelegateMethodBImplementation();
-        handler("also yes");
+        handler.MessagePrinter("also yes");
         String[] y;
     }
 
-    public class DelegateMethodAImplementation implements MessagePrinterBehaviour {
+    public static class DelegateMethodAImplementation implements MessagePrinterBehaviour {
         public String MessagePrinter(String msg) {
             return msg;
         }
     }
 
-    public class DelegateMethodBImplementation implements MessagePrinterBehaviour {
+    public static class DelegateMethodBImplementation implements MessagePrinterBehaviour {
         public String MessagePrinter(String msg) {
             return "other";
         }

@@ -724,12 +724,19 @@ public final class SourceToSourceVisitor implements VoidVisitor<Object> {
     }
 
     public void visit(MethodCallExpr n, Object arg) {
+    	Scope scope = n.getRealScope();
+    	String type = scope.resolve(n.getName()).getType().getName();
+    	boolean isDelegate = scope.resolve(type) instanceof DelegateSymbol;
+    	
         if (n.getScope() != null) {
             n.getScope().accept(this, arg);
             printer.print(".");
         }
         printTypeArgs(n.getTypeArgs(), arg);
         printer.print(n.getName());
+        if (isDelegate) {
+        	printer.print("." + type);
+        }
         printer.print("(");
         if (n.getArgs() != null) {
             for (Iterator<Expression> i = n.getArgs().iterator(); i.hasNext();) {
@@ -867,7 +874,7 @@ public final class SourceToSourceVisitor implements VoidVisitor<Object> {
     	if (isDelegate) {
     		String className = n.getName() + "Implementation";
     		String delegateInterfaceName = classesToCreate.get(n.getName()) + "Behaviour";
-    		printer.printLn("public class " + className + 
+    		printer.printLn("public static class " + className + 
     						" implements " + delegateInterfaceName + " {");
     		printer.indent();
     	}

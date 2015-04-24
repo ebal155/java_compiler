@@ -1,3 +1,5 @@
+package se701;
+
 public class StudentSample {
 	int a;
 	
